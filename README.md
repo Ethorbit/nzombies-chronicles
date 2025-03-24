@@ -24,7 +24,7 @@ nZombies is always tested in Singleplayer and can be played offline with minimal
 
 nZombies Chronicles was specifically built to run on dedicated servers. It was built because the Multiplayer experience is far too broken on any other version of nZombies.
 
-It has garnered a lot of real world server usage and was used by the popular nZC Servers between 2020-2024, during which it was #1 with over 10,000 unique players!
+It has garnered a lot of real world server usage and was used by the popular nZC Servers between 2020-2024, during which it was ranked #1 with over 10,000 unique players!
 
 [![Video](https://img.youtube.com/vi/6D3ayfos2M8/0.jpg)](https://youtu.be/6D3ayfos2M8)
 
