@@ -1,0 +1,21 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/nzpowerups/i_t7_metal_bare_brushed_3_g"
+	"$bumpmap" "models/nzpowerups/nullnormal"
+	
+	"$color2" "[0.6 0.15 0.15]"
+	
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" "1"
+	"$envmaptint" "[0.6 0.15 0.15]"
+	
+	"$phong" "1"
+	"$phongboost" "1"
+	"$phongexponent" "4"
+	//"$phongalbedotint" "1"
+	"$phongtint" "[1.0 0.25 0.25]"
+	"$phongfresnelranges" "[0.1 0.5 0.9]"
+	"$normalmapalphaphongmask" "1"
+	
+	"$nodecal" 1
+}

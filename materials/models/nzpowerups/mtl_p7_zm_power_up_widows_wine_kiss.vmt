@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/nzpowerups/i_mtl_p7_zm_power_up_widows_wine_kiss_c"
+	"$translucent" "1"
+	"$nodecal" "1"
+}

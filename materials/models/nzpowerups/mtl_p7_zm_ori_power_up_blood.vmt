@@ -1,0 +1,28 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/nzpowerups/gold"
+	//"$basetexture" "models/nzpowerups/i_mtl_p7_zm_ori_power_up_blood_s"
+	"$bumpmap" "models/nzpowerups/i_mtl_p7_zm_ori_power_up_blood_n"
+	"$detail" "models/nzpowerups/i_mtl_p7_zm_ori_power_up_blood_s"
+	"$detailscale" "1"
+	"$detailblendmode" "1"
+	"$detailblendfactor" "0.5"
+	
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" "1"
+	"$envmaptint" "[0.75 0.55 0.3]"
+	
+	"$phong" "1"
+	"$phongboost" "32"
+	//"$phongexponenttexture" "models/nzpowerups/i_mtl_p7_zm_ori_power_up_blood_s"
+	//"$phongexponentfactor" "64"
+	"$phongexponent" "4"
+	//"$phongalbedotint" "1"
+	"$phongtint" "[0.75 0.55 0.13]"
+	"$phongfresnelranges" "[0.1 0.5 0.9]"
+	"$normalmapalphaphongmask" "1"
+	
+	"$nodecal" 1
+	//"$vertexalpha" 1
+	//"$vertexcolor" 1
+}
