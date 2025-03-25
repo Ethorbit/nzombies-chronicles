@@ -18,7 +18,7 @@ You can download them from the [Addon Collection](https://steamcommunity.com/sha
 
 ## Singleplayer Compatibility
 
-nZombies is always tested in Singleplayer and can be played offline with minimal problems.
+nZombies Chronicles is always tested in Singleplayer and can be played offline with minimal problems.
 
 ## Server Compatibility
 
