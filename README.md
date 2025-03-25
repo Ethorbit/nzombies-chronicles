@@ -14,7 +14,7 @@ WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies)
     * Tools
     * Traps
     * Zombie / Boss variants
-    * Dynamic spawner API
+    * Dynamic Spawners
 
 ## Missing Content
 
