@@ -20,7 +20,7 @@ You can download them from the [Addon Collection](https://steamcommunity.com/sha
 
 nZombies Chronicles is always tested in Singleplayer and can be played offline with minimal problems.
 
-## Server Compatibility
+## Multiplayer Compatibility
 
 nZombies Chronicles was specifically built to run on dedicated servers. It was built because the Multiplayer experience is far too broken on any other version of nZombies.
 
