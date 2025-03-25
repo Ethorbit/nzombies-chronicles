@@ -6,6 +6,7 @@ WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies)
 * Stays true to classic gameplay
 * Fixes the mode without completely changing it
     * Fixes bugs 👟🐛
+    * Patches vulnerabilities 🩹🦠
     * Adds optimization 🏃
     * Improves stability 💪
     * Enhances Multiplayer Compatibility 🌐
