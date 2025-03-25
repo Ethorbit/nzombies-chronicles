@@ -10,11 +10,11 @@ WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies)
     * Improves stability 💪
     * Enhances Multiplayer Compatibility 🌐
 
-## Dependencies
+## Missing Content
 
-* [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470)
+Some content is missing from this repo because of copyright concerns.
 
-Note: some stuff might be missing and they have been excluded over copyright concerns. You'll have to fix content errors yourself.
+You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470)
 
 ## Singleplayer Compatibility
 
