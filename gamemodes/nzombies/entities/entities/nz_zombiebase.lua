@@ -608,10 +608,10 @@ function ENT:Think()
                 end)
             end
         end
-    else
-        local lag_ourselves_amount = ((MaxFPS() - CurrentFPS()) * 0.01) -- this will be basically nothing in the FPS highs
-        self:NextThink(CurTime() + lag_ourselves_amount)
     end
+
+    local lag_ourselves_amount = ((MaxFPS() - CurrentFPS()) * 0.01) -- this will be basically nothing in the FPS highs
+    self:NextThink(CurTime() + lag_ourselves_amount)
 end
 
 function ENT:DebugThink()
