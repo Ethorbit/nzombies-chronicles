@@ -203,9 +203,9 @@ function ENT:Initialize()
     --self:SetRenderMode(RENDERMODE_TRANSCOLOR)
 
 
-    if CLIENT and NZEvent and NZEvent != "NONE" then
+    if CLIENT and NZEvents then
         if (holidayEnabled and holidayEnabled:GetInt() > 0) then
-            if (NZEvent == "Christmas") then
+            if (NZEvents.Active("Christmas")) then
                 self.CustomModelColor = table.Random({Color(255, 0, 0), Color(0, 255, 0)})
             end
         end
@@ -587,6 +587,31 @@ function ENT:Think()
 
     end
     self:OnThink()
+
+    -- Optimization by giving zombies artificial lag to slow down processing by: Ethorbit
+    -- As our frames drop, the zombies gradually think slower and appear to lag,
+    -- then they start to respawn until the game stops lagging
+    --
+    -- This basically prevents zombies from single-handedly lagging out the server
+    if SERVER then
+        local threshold = (MaxFPS() / 2)
+        if !self.threshold_double_check and CurrentFPS() <= threshold and !self.NZBoss and !self.NZBossType then
+            if CurTime() >= (self:GetLastSpawnTime() + 2) then
+                self.threshold_double_check = true
+                self:TimedEvent(math.Rand(0.0, 5.0), function()
+                    -- It's still lagging, time to respawn so others can play
+                    if CurrentFPS() <= threshold and CurTime() >= (self:GetLastHurt() + 2) then
+                        self:RespawnZombie()
+                    else
+                        self.threshold_double_check = false
+                    end
+                end)
+            end
+        end
+    else
+        local lag_ourselves_amount = ((MaxFPS() - CurrentFPS()) * 0.01) -- this will be basically nothing in the FPS highs
+        self:NextThink(CurTime() + lag_ourselves_amount)
+    end
 end
 
 function ENT:DebugThink()
@@ -2049,15 +2074,18 @@ function ENT:Kill(dmginfo, noprogress, noragdoll)
 end
 
 function ENT:RespawnZombie()
-    if SERVER then
-        if self:GetSpawner() then
-            self:GetSpawner():IncrementZombiesToSpawn()
-            self:GetSpawner():DecrementZombiesSpawned()
-            self:GetSpawner():MarkNextZombieAsRespawned()
-        end
+    self:MakeDust(1)
+    self:TimedEvent(0.5, function()
+        if SERVER then
+            if self:GetSpawner() then
+                self:GetSpawner():IncrementZombiesToSpawn()
+                self:GetSpawner():DecrementZombiesSpawned()
+                self:GetSpawner():MarkNextZombieAsRespawned()
+            end
 
-        self:Remove()
-    end
+            self:Remove()
+        end
+    end)
 end
 
 function ENT:Freeze(time)
