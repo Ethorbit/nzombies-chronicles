@@ -67,6 +67,9 @@ AccessorFunc( ENT, "fNextPlayerTarget", "NextPlayerTarget", FORCE_NUMBER)
 --AccessorFunc( ENT, "fLastPlayerTarget", "LastPlayerTarget", FORCE_NUMBER)
 AccessorFunc( ENT, "bAttackingPaused", "AttackingPaused", FORCE_BOOL)
 
+-- Optimization
+AccessorFunc( ENT, "bCheckingForLag", "CheckingForLag", FORCE_NUMBER)
+
 --sounds
 AccessorFunc( ENT, "fNextMoanSound", "NextMoanSound", FORCE_NUMBER)
 
@@ -339,6 +342,9 @@ function ENT:CreateTrigger() -- By Ethorbit, Zombies now have triggers that cove
     self.CollisionTrigger:ListenToTriggerEvent(function(event, ent)
         if event != "Touch" then return end
         if ent:IsPlayer() then return end
+        if ent:IsValidZombie() then return end -- Since zombies can overlap, this causes insane amounts of collision. If you want this, optimize this better first.
+
+        print(CurTime(), event, ent)
 
         if !self.ForcedCollisions[ent] or CurTime() > self.ForcedCollisions[ent] then
             local phys_obj = ent:GetPhysicsObject()
@@ -593,25 +599,32 @@ function ENT:Think()
     -- then they start to respawn until the game stops lagging
     --
     -- This basically prevents zombies from single-handedly lagging out the server
-    if SERVER then
-        local threshold = (MaxFPS() / 2)
-        if !self.threshold_double_check and CurrentFPS() <= threshold and !self.NZBoss and !self.NZBossType then
-            if CurTime() >= (self:GetLastSpawnTime() + 2) then
-                self.threshold_double_check = true
+    local max_think = 0.1
+    local think_time = self:CalculateNextThink()
+    if SERVER and !self.NZBoss and !self.NZBossType then
+        if think_time >= (CurTime() + max_think) then
+            if !self:GetCheckingForLag() and (CurTime() - self:GetLastSpawnTime()) >= 2 then
+                self:SetCheckingForLag(true)
                 self:TimedEvent(math.Rand(0.0, 5.0), function()
-                    -- It's still lagging, time to respawn so others can play
-                    if CurrentFPS() <= threshold and CurTime() >= (self:GetLastHurt() + 2) then
+                    if (self:CalculateNextThink() >= (CurTime() + max_think)) then
                         self:RespawnZombie()
                     else
-                        self.threshold_double_check = false
+                        self:SetCheckingForLag(false)
                     end
                 end)
             end
         end
     end
+    self:NextThink(think_time)
+    if CLIENT then self:SetNextClientThink(think_time) end -- Does this even do anything?
+end
 
-    local lag_ourselves_amount = ((MaxFPS() - CurrentFPS()) * 0.01) -- this will be basically nothing in the FPS highs
-    self:NextThink(CurTime() + lag_ourselves_amount)
+function ENT:CalculateNextThink()
+    local max_fps = MaxFPS()
+    local fps_loss_ratio = (max_fps - CurrentFPS()) / max_fps
+    local think_frame_scale = 1 + math.pow(math.max(0, fps_loss_ratio * 5), 1.5)  
+    local next_think = (CurTime() + (engine.TickInterval() * think_frame_scale))
+    return next_think
 end
 
 function ENT:DebugThink()
@@ -777,7 +790,7 @@ function ENT:Draw()
     self:DrawModel()
 
     if CLIENT then
-        if (NZEvent == "April Fools") then
+        if NZEvents.Active("April Fools") then
             if (!self.AprilFoolsModelScale) then
                 self.AprilFoolsModelScale = math.Rand(0.45, 1.5)
             else
@@ -793,7 +806,7 @@ function ENT:Draw()
     if (!zombieEyeRenderInt or zombieEyeRenderInt and zombieEyeRenderInt > 0) then
         local eyeColor
         if (holidayEnabled and holidayEnabled:GetInt() > 0) then
-            if (NZEvent == "Christmas") then
+            if NZEvents and NZEvents.Active("Christmas") then
                 eyeColor = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255)) -- Christmas light eyes
             end
 
