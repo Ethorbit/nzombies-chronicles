@@ -12,6 +12,7 @@ WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies)
     * Stability 💪
     * Multiplayer Compatibility 🌐
 * Adds content without altering the core gameplay
+    * Icons
     * Tools
     * Traps
     * Zombie / Boss variants
