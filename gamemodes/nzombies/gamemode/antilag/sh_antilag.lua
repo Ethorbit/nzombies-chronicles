@@ -1,5 +1,6 @@
 -- AntiLag module created by: Ethorbit
 -- It was inspired by an nZC server addon I made
+
 local max_time = 2 -- Maximum time between lag level tests. You don't want this too high or scans could take a bit.
 local lag_time = 0.03 -- How long to wait before rechecking lag for lag confirmation?
 local cooldown = 5 -- After an AntiLag definition's function runs, it cannot run again until after this many seconds
@@ -7,30 +8,14 @@ local cooldowns = {}
 local definitions = {} -- The AntiLag definitions created at runtime. Defaults are created just below..
 local levels = {}
 
-local function update_levels(max_fps)
-    levels = {
-        ONE = 1,
-        TWO = 2,
-        THREE = 3,
-        FOUR = 4,
-        FIVE = 5,
-        TEN = 10,
-        TWENTY = 20,
-        THIRTY = 30,
-        LOW = (max_fps * 0.25),
-        CRITICAL = (max_fps * 0.1)
-    }
-end
-update_levels(MaxFPS())
-hook.Add("MaxFPSChange", "NZAntiLag.MaxFPSUpdate", function(_, new_fps)
-    update_levels(new_fps)
-end)
-
 NZAntiLag = {
     Levels = {
         Get = function(name)
             if !name then return levels end
             return levels[name]
+        end,
+        Add = function(name, fps)
+            levels[name] = fps
         end
     },
     Create = function(name, level_name, func)
@@ -39,7 +24,20 @@ NZAntiLag = {
     end
 }
 
--- Default AntiLag definitions
+-- Default Levels
+local function update_levels(max_fps)
+    NZAntiLag.Levels.Add("ONE", 1)
+    NZAntiLag.Levels.Add("TWO", 2)
+    NZAntiLag.Levels.Add("THREE", 3)
+    NZAntiLag.Levels.Add("FOUR", 4)
+    NZAntiLag.Levels.Add("FIVE", 5)
+    NZAntiLag.Levels.Add("TEN", 10)
+    NZAntiLag.Levels.Add("TWENTY", 20)
+    NZAntiLag.Levels.Add("THIRTY", 30)
+    NZAntiLag.Levels.Add("LOW", (max_fps * 0.25))
+    NZAntiLag.Levels.Add("CRITICAL", (max_fps * 0.1))
+end
+-- Default Definitions
 NZAntiLag.Create("Respawn Zombies", "LOW", function()
     if SERVER then
         for _,zombie in pairs(ents.GetAll()) do
@@ -49,13 +47,20 @@ NZAntiLag.Create("Respawn Zombies", "LOW", function()
         end
     end
 end)
-
 NZAntiLag.Create("Restart Round", "CRITICAL", function()
     if SERVER and nzRound:InProgress() then
         RunConsoleCommand("nz_restartround")
     end
 end)
 
+hook.Add(SERVER and "Initialize" or "InitPostEntity", "NZAntiLag.UpdateDefaultLevels", function()
+    update_levels(MaxFPS())
+end)
+hook.Add("MaxFPSChange", "NZAntiLag.MaxFPSUpdate", function(_, new_fps)
+    update_levels(new_fps)
+end)
+
+-- The brain
 local next_scan = 0
 hook.Add("FPSChange", "NZAntiLag.Scanner", function(_, new_fps)
     if CurTime() < next_scan then return end
