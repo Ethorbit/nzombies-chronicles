@@ -90,7 +90,7 @@ hook.Add("FPSChange", "NZAntiLag.Scanner", function(_, new_fps)
                             timer.Simple(lag_time, function()
                                 if (CurrentFPS() < level_value) then
                                     if SERVER then
-                                        ServerLog(string.format("[nZombies Anti-Lag] FPS REACHED LEVEL: %s (%i).\n", level_name, level_value))
+                                        ServerLog(string.format("[nZ] FPS REACHED LEVEL: %s (%i).\n", level_name, level_value))
                                     end
 
                                     if !definitions[level_name] then return end
@@ -98,7 +98,7 @@ hook.Add("FPSChange", "NZAntiLag.Scanner", function(_, new_fps)
                                         if !definition_name then return end
                                         if !isfunction(definition_func) then return end
                                         if SERVER then
-                                            PrintMessage(HUD_PRINTTALK, string.format("[nZombies Anti-Lag] Executing %s FPS FIX: %s.", level_name, definition_name))
+                                            PrintMessage(HUD_PRINTTALK, string.format("[nZ] Executing %s FPS FIX: %s.", level_name, definition_name))
                                         end
                                         -- Finally, run the definition's custom function, where it will do something to (hopefully) resolve the lag.
                                         definition_func()

@@ -134,7 +134,7 @@ function PLAYER:WarnToMove(force) -- Give the player a chance to move before bei
     end)
 
     local warnedPos = self:GetPos() -- Where they were when they were warned
-    print("[NZ Anti-Cheat] Warning " .. self:Nick() .. " to move..")
+    print("[nZ Anti-Cheat] Warning " .. self:Nick() .. " to move..")
 end
 
 function PLAYER:InAC(class) -- Can used to check if a player is inside an entity that derives from invis_wall
@@ -282,8 +282,8 @@ function PLAYER:NZMoveCheater() -- Teleports them out of the cheat spot
             self.allowsavespot = true
         end)
 
-        ServerLog("[NZ Anti-Cheat] " .. self:Nick() .. " was caught cheating!\n")
-        PrintMessage(HUD_PRINTTALK, "[NZ] " .. self:Nick() .. " was teleported by the Anti-Cheat.")
+        ServerLog("[nZ Anti-Cheat] " .. self:Nick() .. " was caught cheating!\n")
+        PrintMessage(HUD_PRINTTALK, "[nZ] " .. self:Nick() .. " was teleported by the Anti-Cheat.")
         hook.Call("NZAntiCheatMovedPlayer", nil, oldPos, self)
     end
 end
