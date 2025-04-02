@@ -20,7 +20,7 @@ hook.Add("Think", "UpdateFPS", function()
 
     if last_fps ~= fps then
         if fps < MaxFPS() then
-            hook.Run("FPSDrop", fps, lag_time)
+            hook.Run("FPSDrop", fps)
         end
 
         hook.Run("FPSChange", last_fps, fps)
