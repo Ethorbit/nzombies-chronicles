@@ -1,6 +1,7 @@
 # ![Icon](icon.png) nZombies Chronicles
 
 WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies), a collaborative effort to fix everything wrong with nZombies.
+
 * Holds incredibly high standards
 * Stays true to classic gameplay
 * Fully supports Singleplayer and Multiplayer
