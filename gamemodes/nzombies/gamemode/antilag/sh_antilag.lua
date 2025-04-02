@@ -1,11 +1,10 @@
 -- AntiLag module created by: Ethorbit
 -- It was inspired by an nZC server addon I made
 
-local max_time = 2 -- Maximum time between lag level tests. You don't want this too high or scans could take a bit.
-local lag_time = 0.03 -- How long to wait before rechecking lag for lag confirmation?
-local cooldown = 5 -- After an AntiLag definition's function runs, it cannot run again until after this many seconds
+local lag_debugging = true -- If you're not sure why it's not working or why there is a false positive, set this to true and watch the console/chat.
+local lag_check_proportion = 0.15 -- 0 (0%) to 1 (100%)
+local lag_check_time = 2 -- If it lags <lag_check_proportion> for this many seconds, then consider it lag.
 local cooldowns = {}
-local definitions = {} -- The AntiLag definitions created at runtime. Defaults are created just below..
 local levels = {}
 
 NZAntiLag = {
@@ -18,13 +17,59 @@ NZAntiLag = {
             levels[name] = fps
         end
     },
-    Create = function(name, level_name, func)
-        definitions[level_name] = definitions[level_name] or {}
-        definitions[level_name][name] = func
+    Create = function(name, level_name, func, cooldown)
+        cooldown = cooldown or 5
+        if !isstring(name) then print("[nZ] Failed to create NZAntiLag definition. Invalid name.\n") return end
+        if !isfunction(func) then print(string.format("[nZ] Failed to create NZAntiLag definition. Invalid function for lag level %s, entry %s\n", level_name, name)) return end
+
+        local fps_threshold = levels[level_name]
+        if !fps_threshold then print(string.format("[nZ] Failed to create NZAntiLag definition. fps_threshold for lag level %s, entry %s is invalid.\n", level_name, name)) return end
+
+        hook.Add("FPSDrop", level_name .. "_" .. name, function(fps, _)
+            cooldowns[level_name] = cooldowns[level_name] or {}
+            cooldowns[level_name][name] = cooldowns[level_name][name] or {}
+            cooldowns[level_name][name].cooldown = cooldowns[level_name][name].cooldown or 0
+
+            if CurTime() < cooldowns[level_name][name].cooldown then return end
+            cooldowns[level_name][name].cooldown = CurTime() + lag_check_time + 1 -- Don't let it run while we're currently checking lag time
+
+            if CurrentFPS() < fps_threshold then
+                -- Lag confirmation, avoids false positives (i.e millisecond lag spikes caused by background server processes running on the same thread)
+                nzMisc.TimeWeightedCheck(lag_check_time, lag_check_proportion, function()
+                    if lag_debugging then
+                        print(string.format("[nZ] AntiLag Debugging. Is CurrentFPS (%i) under FPS Threshold (%i)?", CurrentFPS(), fps_threshold))
+                    end
+                    return CurrentFPS() < fps_threshold
+                end,
+                function(condition, success_proportion, results)
+                    if condition then
+                        if SERVER then
+                            local msg = string.format("[nZ] Executing %s FPS fix: %s.", level_name, name)
+                            PrintMessage(HUD_PRINTTALK, msg)
+                            print(msg)
+                        end
+
+                        if isfunction(func) then
+                            cooldowns[level_name][name].cooldown = CurTime() + cooldown
+                            func()
+                        end
+                    else
+                        -- Reset the cooldown since it didn't actually execute
+                        cooldowns[level_name][name].cooldown = 0
+                    end
+
+                    if lag_debugging then
+                        print(string.format("[nZ] AntiLag Debugging. Success Proportion was: %f", success_proportion))
+                        print("[nZ] AntiLag Debugging. Here's what the results table looks like")
+                        PrintTable(results)
+                    end
+                end)
+            end
+        end)
     end
 }
 
--- Default Levels
+-- Defaults
 local function update_levels(max_fps)
     NZAntiLag.Levels.Add("ONE", 1)
     NZAntiLag.Levels.Add("TWO", 2)
@@ -34,84 +79,33 @@ local function update_levels(max_fps)
     NZAntiLag.Levels.Add("TEN", 10)
     NZAntiLag.Levels.Add("TWENTY", 20)
     NZAntiLag.Levels.Add("THIRTY", 30)
-    NZAntiLag.Levels.Add("LOW", (max_fps * 0.25))
-    NZAntiLag.Levels.Add("CRITICAL", (max_fps * 0.1))
-end
--- Default Definitions
-NZAntiLag.Create("Respawn Zombies", "LOW", function()
-    if SERVER then
-        for _,zombie in pairs(ents.GetAll()) do
-            if zombie:IsValidZombie() then
-                zombie:RespawnZombie()
+    NZAntiLag.Levels.Add("MEDIUM", math.Round(max_fps * 0.5))
+    NZAntiLag.Levels.Add("LOW", math.Round(max_fps * 0.25))
+    NZAntiLag.Levels.Add("CRITICAL", math.Round(max_fps * 0.1))
+
+    NZAntiLag.Create("Respawn Zombies", "LOW", function()
+        if SERVER then
+            for _,zombie in pairs(ents.GetAll()) do
+                if zombie.RespawnZombie then
+                    zombie:RespawnZombie()
+                end
             end
         end
-    end
-end)
-NZAntiLag.Create("Restart Round", "CRITICAL", function()
-    if SERVER and nzRound:InProgress() then
-        RunConsoleCommand("nz_restartround")
-    end
-end)
+    end, 5)
 
+    NZAntiLag.Create("Restart Round", "CRITICAL", function()
+        if SERVER and nzRound:InProgress() then
+            RunConsoleCommand("nz_restartround")
+        end
+    end, 20)
+
+    hook.Run("NZAntiLag.Initialize", NZAntiLag)
+end
+
+update_levels(MaxFPS and MaxFPS() or 60)
 hook.Add(SERVER and "Initialize" or "InitPostEntity", "NZAntiLag.UpdateDefaultLevels", function()
     update_levels(MaxFPS())
 end)
 hook.Add("MaxFPSChange", "NZAntiLag.MaxFPSUpdate", function(_, new_fps)
     update_levels(new_fps)
-end)
-
--- The brain
-local next_scan = 0
-hook.Add("FPSChange", "NZAntiLag.Scanner", function(_, new_fps)
-    if CurTime() < next_scan then return end
-
-    -- Sort levels and their timings in decending order, then
-    -- iterate one after another with max_time delay
-    --
-    -- The reason we do it like this, is so that if a lag fix works
-    -- then the other ones won't be triggered since by the time they run
-    -- the FPS would be lower
-    local iterations = 0
-    for level_name, level_value in SortedPairsByValue(levels, true) do
-        if definitions[level_name] then
-            iterations = iterations + 1
-        end
-
-        next_scan = CurTime() + (max_time * iterations)
-        timer.Simple(max_time * iterations, function()
-            if definitions[level_name] then
-                if level_value > 0 then
-                    if (new_fps < level_value) then
-                        cooldowns[level_name] = cooldowns[level_name] or 0
-                        if cooldowns[level_name] and CurTime() > cooldowns[level_name] then
-                            cooldowns[level_name] = CurTime() + cooldown
-                            -- We already know the FPS is low, but let's check again a little later
-                            -- this way we can tell if it's lag or just a small dip in FPS
-                            timer.Simple(lag_time, function()
-                                if (CurrentFPS() < level_value) then
-                                    if SERVER then
-                                        ServerLog(string.format("[nZ] FPS REACHED LEVEL: %s (%i).\n", level_name, level_value))
-                                    end
-
-                                    if !definitions[level_name] then return end
-                                    for definition_name, definition_func in pairs(definitions[level_name]) do
-                                        if !definition_name then return end
-                                        if !isfunction(definition_func) then return end
-                                        if SERVER then
-                                            PrintMessage(HUD_PRINTTALK, string.format("[nZ] Executing %s FPS FIX: %s.", level_name, definition_name))
-                                        end
-                                        -- Finally, run the definition's custom function, where it will do something to (hopefully) resolve the lag.
-                                        definition_func()
-                                    end
-                                else
-                                    -- Since we didn't actually run it, reset its cooldown
-                                    cooldowns[level_name] = 0
-                                end
-                            end)
-                        end
-                    end
-                end
-            end
-        end)
-    end
 end)
