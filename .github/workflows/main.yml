@@ -17,5 +17,5 @@ jobs:
         if: always()  # ensures this runs even if previous steps fail
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          content: "<@&1428209991990378517> https://github.com/Ethorbit/nzombies-chronicles"
+          content: "<@&1428209991990378517>"
           url: "https://github.com/Ethorbit/nzombies-chronicles"
