@@ -2,6 +2,7 @@ name: Deploy and Notify Discord
 
 # Trigger on every push to main branch
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
