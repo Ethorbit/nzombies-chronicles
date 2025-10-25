@@ -1,7 +1,14 @@
 -- AntiLag module created by: Ethorbit
 -- It was inspired by an nZC server addon I made
 
-local lag_debugging = false -- If you're not sure why it's not working or why there is a false positive, set this to true and watch the console/chat.
+-- If you're not sure why it's not working or why there is a false positive, set this to true and watch the console/chat.
+CreateConVar( "nz_lag_debug", "0", { FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_CHEAT } )
+lagvar = GetConVar("nz_lag_debug")
+
+local function is_debugging()
+    return lagvar and lagvar:GetBool()
+end
+
 local lag_check_proportion = 0.15 -- 0 (0%) to 1 (100%)
 local lag_check_time = 2 -- If it lags <lag_check_proportion> for this many seconds, then consider it lag.
 local cooldowns = {}
@@ -26,7 +33,7 @@ NZAntiLag = {
         if !fps_threshold then print(string.format("[nZ] Failed to create NZAntiLag definition. fps_threshold for lag level %s, entry %s is invalid.\n", level_name, name)) return end
 
         hook.Add("FPSDrop", level_name .. "_" .. name, function(fps, _)
-            if !lag_debugging and nzRound:InState(ROUND_CREATE) then return end -- We really only need AntiLag for real gameplay
+            if !is_debugging() and nzRound:InState(ROUND_CREATE) then return end -- We really only need AntiLag for real gameplay
 
             cooldowns[level_name] = cooldowns[level_name] or {}
             cooldowns[level_name][name] = cooldowns[level_name][name] or {}
@@ -38,7 +45,7 @@ NZAntiLag = {
             if CurrentFPS() < fps_threshold then
                 -- Lag confirmation, avoids false positives (i.e millisecond lag spikes caused by background server processes running on the same thread)
                 nzMisc.TimeWeightedCheck(lag_check_time, lag_check_proportion, function()
-                    if lag_debugging then
+                    if is_debugging() then
                         print(string.format("[nZ] AntiLag Debugging. Is CurrentFPS (%i) under FPS Threshold (%i)?", CurrentFPS(), fps_threshold))
                     end
                     return CurrentFPS() < fps_threshold
@@ -60,7 +67,7 @@ NZAntiLag = {
                         cooldowns[level_name][name].cooldown = 0
                     end
 
-                    if lag_debugging then
+                    if is_debugging() then
                         print(string.format("[nZ] AntiLag Debugging. Success Proportion was: %f", success_proportion))
                         print("[nZ] AntiLag Debugging. Here's what the results table looks like")
                         PrintTable(results)

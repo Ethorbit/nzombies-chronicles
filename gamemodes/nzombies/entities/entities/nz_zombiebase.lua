@@ -156,6 +156,10 @@ function ENT:GetDebugging()
     return self.debugvar and self.debugvar:GetBool()
 end
 
+function ENT:GetDebuggingLag()
+    return self.debuglagvar and self.debuglagvar:GetBool()
+end
+
 
 -- Collision helper functions added by Ethorbit so that custom enemies don't need to hardcode the collision type
 function ENT:EnableCollision()
@@ -173,6 +177,7 @@ end
 function ENT:Initialize()
     self:SetSpawned(false)
     self.debugvar = GetConVar("nz_zombie_debug")
+    self.debuglagvar = GetConVar("nz_lag_debug")
 
     self:SetAttackingPaused(false)
     self.FrozenTime = 0
@@ -601,20 +606,25 @@ function ENT:Think()
     -- This basically prevents zombies from single-handedly lagging out the server
     local max_think = 0.1
     local think_time = self:CalculateNextThink()
-    if SERVER and !nzRound:InState(ROUND_CREATE) and !TimescaleChanged() and !self.NZBoss and !self.NZBossType then
-        if think_time >= (CurTime() + max_think) then
-            if !self:GetCheckingForLag() and (CurTime() - self:GetLastSpawnTime()) >= 2 then
-                self:SetCheckingForLag(true)
-                self:TimedEvent(math.Rand(0.0, 5.0), function()
-                    if (self:CalculateNextThink() >= (CurTime() + max_think)) then
-                        self:RespawnZombie()
-                    else
-                        self:SetCheckingForLag(false)
+    if SERVER then
+        if self:GetDebuggingLag() or !nzRound:InState(ROUND_CREATE) then
+            if !TimescaleChanged() and !self.NZBoss and !self.NZBossType then
+                if think_time >= (CurTime() + max_think) then
+                    if !self:GetCheckingForLag() and (CurTime() - self:GetLastSpawnTime()) >= 2 then
+                        self:SetCheckingForLag(true)
+                        self:TimedEvent(math.Rand(0.0, 5.0), function()
+                            if (self:CalculateNextThink() >= (CurTime() + max_think)) then
+                                self:RespawnZombie()
+                            else
+                                self:SetCheckingForLag(false)
+                            end
+                        end)
                     end
-                end)
+                end
             end
         end
     end
+
     self:NextThink(think_time)
     if CLIENT then self:SetNextClientThink(think_time) end -- Does this even do anything?
 end
