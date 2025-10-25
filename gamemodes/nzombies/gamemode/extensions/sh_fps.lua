@@ -7,13 +7,6 @@
 local highest_fps = 0
 local last_fps = 0
 
--- Make sure not to run AntiLag when timescale is not normal
-local timescale_cvar
-local function get_time_scale()
-    timescale_cvar = GetConVar("host_timescale") or timescale_cvar
-    return timescale_cvar and timescale_cvar:GetFloat() or 1
-end
-
 function CurrentFPS()
     return math.Round(math.Clamp(1 / engine.AbsoluteFrameTime(), 0, MaxFPS()))
 end
@@ -23,7 +16,7 @@ function MaxFPS()
 end
 
 hook.Add("Think", "UpdateFPS", function()
-    if get_time_scale() ~= 1 then return end
+    if TimescaleChanged() then return end
 
     local fps = CurrentFPS()
 
@@ -38,7 +31,8 @@ hook.Add("Think", "UpdateFPS", function()
 end)
 
 hook.Add("Think", "UpdateHighestFPS", function()
-    if get_time_scale() ~= 1 then return end
+    if TimescaleChanged() then return end
+
     local fps = math.Round(1 / FrameTime())
 
     if fps > highest_fps then
