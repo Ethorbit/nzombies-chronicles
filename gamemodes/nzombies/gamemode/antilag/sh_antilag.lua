@@ -1,7 +1,7 @@
 -- AntiLag module created by: Ethorbit
 -- It was inspired by an nZC server addon I made
 
-local lag_debugging = true -- If you're not sure why it's not working or why there is a false positive, set this to true and watch the console/chat.
+local lag_debugging = false -- If you're not sure why it's not working or why there is a false positive, set this to true and watch the console/chat.
 local lag_check_proportion = 0.15 -- 0 (0%) to 1 (100%)
 local lag_check_time = 2 -- If it lags <lag_check_proportion> for this many seconds, then consider it lag.
 local cooldowns = {}
@@ -26,6 +26,8 @@ NZAntiLag = {
         if !fps_threshold then print(string.format("[nZ] Failed to create NZAntiLag definition. fps_threshold for lag level %s, entry %s is invalid.\n", level_name, name)) return end
 
         hook.Add("FPSDrop", level_name .. "_" .. name, function(fps, _)
+            if !lag_debugging and nzRound:InState(ROUND_CREATE) then return end -- We really only need AntiLag for real gameplay
+
             cooldowns[level_name] = cooldowns[level_name] or {}
             cooldowns[level_name][name] = cooldowns[level_name][name] or {}
             cooldowns[level_name][name].cooldown = cooldowns[level_name][name].cooldown or 0
