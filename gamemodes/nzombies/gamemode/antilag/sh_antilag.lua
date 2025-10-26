@@ -56,6 +56,7 @@ NZAntiLag = {
                             local msg = string.format("[nZ] Executing %s FPS fix: %s.", level_name, name)
                             PrintMessage(HUD_PRINTTALK, msg)
                             print(msg)
+                            hook.Run("NZAntiLag.Execute", level_name, name)
                         end
 
                         if isfunction(func) then
