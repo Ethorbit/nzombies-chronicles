@@ -33,7 +33,7 @@ end)
 
 local function play_song(url, flags) -- Added by Ethorbit to make it easier and more reliable to PlayURL, with error handling and proper playback
 	local isPreloading = string.find(flags, "noplay")
-	local volume = 1.2 -- Music was too quiet, make it slightly louder
+	local volume = 1.0 -- TODO: Give this volume a ConVar
     if isPreloading then
 		if EasterEggData.PreloadedSong == url then return end -- We already did this..
 		EasterEggData.PreloadedSong = url
