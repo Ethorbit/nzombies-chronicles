@@ -26,7 +26,7 @@ Some content is missing from this repo because of copyright concerns.
 You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470).
 
 ### Server Usage
-nZombies Chronicles has picked up on a lot of server usage. It's used by the Official nZC Server, which opened in 2020. It has ranked #1, receiving over 10,000 unique players!
+nZombies Chronicles has picked up on a lot of server usage. It's used by the Official nZC Server, which first opened in 2020. It has ranked #1, receiving over 10,000 unique players!
 
 `play.nzcservers.com:27018`
 
