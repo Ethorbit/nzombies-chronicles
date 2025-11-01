@@ -103,11 +103,12 @@ local function update_levels(max_fps)
         end
     end, 5)
 
-    NZAntiLag.Create("Restart Round", "CRITICAL", function()
-        if SERVER and nzRound:InProgress() then
-            RunConsoleCommand("nz_restartround")
-        end
-    end, 20)
+    -- Restarting the round is too disruptive to gameplay
+    -- NZAntiLag.Create("Restart Round", "CRITICAL", function()
+    --     if SERVER and nzRound:InProgress() then
+    --         RunConsoleCommand("nz_restartround")
+    --     end
+    -- end, 20)
 
     hook.Run("NZAntiLag.Initialize", NZAntiLag)
 end
