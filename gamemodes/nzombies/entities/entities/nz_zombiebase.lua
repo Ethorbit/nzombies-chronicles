@@ -112,6 +112,27 @@ AccessorFunc( ENT, "bTargetUnreachable", "TargetUnreachable", FORCE_BOOL)
 
 AccessorFunc( ENT, "iActStage", "ActStage", FORCE_NUMBER)
 
+-- Shared data Optimization.
+-- When all zombies of a class do the same exact thing,
+-- cache calculations inside this table
+local shared_data = {}
+local function get_shared_data()
+    return shared_data
+end
+
+function ENT:GetSharedData(key)
+    if not key then return shared_data[self:GetClass()] end
+    return shared_data[self:GetClass()] and shared_data[self:GetClass()][key]
+end
+
+function ENT:SetSharedData(key, val)
+    if not shared_data[self:GetClass()] then
+        shared_data[self:GetClass()] = {}
+    end
+
+    shared_data[self:GetClass()][key] = val
+end
+
 ENT.ActStages = {}
 
 ENT.HeadshotSounds = { -- Added by Ethorbit since people want to extend this
@@ -176,7 +197,6 @@ end
 
 function ENT:Initialize()
     self:SetSpawned(false)
-    self.validActivities = {} -- Needed now that we check validity of activities /Ethorbit
     self.debugvar = GetConVar("nz_zombie_debug")
     self.debuglagvar = GetConVar("nz_lag_debug")
 
@@ -2562,19 +2582,20 @@ function ENT:HasActivity(act)
     end
 
     -- Check cache first
-    if self.validActivities[act] ~= nil then
-        return self.validActivities[act]
-    end
+    local validActivities = self:GetSharedData("ValidActivities") or {}
+    if validActivities[act] ~= nil then return validActivities[act] end
 
     -- Not cached, check and cache the result
     for i = 0, self:GetSequenceCount() - 1 do
         if self:GetSequenceActivity(i) == act then
-            self.validActivities[act] = true
+            validActivities[act] = true
+            self:SetSharedData("ValidActivities", validActivities)
             return true
         end
     end
 
-    self.validActivities[act] = false
+    validActivities[act] = false
+    self:SetSharedData("ValidActivities", validActivities)
     return false
 end
 
