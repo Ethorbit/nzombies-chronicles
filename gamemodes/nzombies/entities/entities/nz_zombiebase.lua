@@ -176,6 +176,7 @@ end
 
 function ENT:Initialize()
     self:SetSpawned(false)
+    self.validActivities = {} -- Needed now that we check validity of activities /Ethorbit
     self.debugvar = GetConVar("nz_zombie_debug")
     self.debuglagvar = GetConVar("nz_lag_debug")
 
@@ -2449,7 +2450,7 @@ function ENT:TriggerBarricadeJump( barricade, dir )
 
         if jumping then 
             if type(animtbl) == "number" then -- ACT_ is a number, this is set if it's an ACT
-                id = self:SelectWeightedSequence(animtbl)
+                id = self:SafeSelectWeightedSequence(animtbl)
                 dur = self:SequenceDuration(id)
                 speed = self:GetSequenceGroundSpeed(id)
                 if speed < 10 then
@@ -2462,13 +2463,13 @@ function ENT:TriggerBarricadeJump( barricade, dir )
                     speed = targettbl.speed
                     --dur = targettbl.time or dur
                 else
-                    id = self:SelectWeightedSequence(ACT_JUMP)
+                    id = self:SafeSelectWeightedSequence(ACT_JUMP)
                     dur = self:SequenceDuration(id)
                     speed = 30
                 end
             end
         else 
-            id = self:SelectWeightedSequence(self:GetActivity()) --self:SelectWeightedSequence(ACT_JUMP)
+            id = self:SafeSelectWeightedSequence(self:GetActivity()) --self:SafeSelectWeightedSequence(ACT_JUMP)
             dur = self:SequenceDuration(id)
             speed = self:GetRunSpeed() --self.loco:GetDesiredSpeed()
         
@@ -2533,9 +2534,63 @@ function ENT:GetShootPos()
 
 end
 
+function ENT:LogInvalidActivity(act)
+    local act_str = tostring(act)
+    local log = string.format("[nZ] The activity: %s is INVALID for class: %s\n", act_str, self:GetClass())
+
+    if SERVER then
+        ServerLog(log)
+    else
+        print(log)
+    end
+end
+
+-- Make a way to check if an activity is valid
+-- This should ALWAYS be used before playing an activity
+-- 
+-- This was needed because if it plays an inactive activity, the
+-- entire nextbot breaks and it can't do anything — not even respawn
+-- By: Ethorbit
+function ENT:HasActivity(act)
+    -- If it's a string (sequence name), convert to activity first
+    if type(act) == "string" then
+        local seqId = self:LookupSequence(act)
+        if seqId == -1 then
+            return false -- Invalid sequence name
+        end
+        act = self:GetSequenceActivity(seqId)
+    end
+
+    -- Check cache first
+    if self.validActivities[act] ~= nil then
+        return self.validActivities[act]
+    end
+
+    -- Not cached, check and cache the result
+    for i = 0, self:GetSequenceCount() - 1 do
+        if self:GetSequenceActivity(i) == act then
+            self.validActivities[act] = true
+            return true
+        end
+    end
+
+    self.validActivities[act] = false
+    return false
+end
+
+-- Safeguard SelectWeightedSequence: make it reject invalid activities
+-- By: Ethorbit
+function ENT:SafeSelectWeightedSequence(act)
+    if not self:HasActivity(act) then
+        self:LogInvalidActivity(act)
+    return ACT_IDLE end
+
+    return self:SelectWeightedSequence(act)
+end
+
 function ENT:LookupSequenceAct(id)
     if type(id) == "number" then
-        local id = self:SelectWeightedSequence(id)
+        local id = self:SafeSelectWeightedSequence(id)
         local dur = self:SequenceDuration(id)
         return id, dur
     else
@@ -2544,6 +2599,11 @@ function ENT:LookupSequenceAct(id)
 end
 
 function ENT:StartActivitySeq(act)
+    -- Safeguard added by: Ethorbit
+    if not self:HasActivity(act) then
+        self:LogInvalidActivity(act)
+    return end
+
     if type(act) == "number" then
         self:StartActivity(act)
     else
