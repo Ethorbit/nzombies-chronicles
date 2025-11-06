@@ -1857,6 +1857,10 @@ if SERVER then
         BaseClass.OnKilled(self, dmginfo)
     end
 
+    -- DON'T RAGDOLL. We got our own cool death thing.
+    function ENT:OnZombieDeath()
+    end
+
     function ENT:PostDeath(dmginfo) end -- Called when you want something to happen after the zombie dies...
 
     function ENT:PerformDeath(dmginfo)
