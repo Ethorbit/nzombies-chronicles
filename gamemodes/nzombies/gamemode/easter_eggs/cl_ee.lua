@@ -33,13 +33,15 @@ end)
 
 local function play_song(url, flags) -- Added by Ethorbit to make it easier and more reliable to PlayURL, with error handling and proper playback
 	local isPreloading = string.find(flags, "noplay")
-	if isPreloading then
+	local volume = 1.0 -- TODO: Give this volume a ConVar
+    if isPreloading then
 		if EasterEggData.PreloadedSong == url then return end -- We already did this..
 		EasterEggData.PreloadedSong = url
 	end
 
 	if !isPreloading and IsValid(EasterEggData.AudioChannel) then
 		print("Playing easter egg song!")
+        EasterEggData.AudioChannel:SetVolume(volume)
 		EasterEggData.AudioChannel:Play()
 	return end
 
@@ -57,7 +59,8 @@ local function play_song(url, flags) -- Added by Ethorbit to make it easier and 
 			return end
 
 			if IsValid(channel) then
-				channel:Play()
+                channel:SetVolume(volume)
+                channel:Play()
 			end
 		else
 			if !errorID then

@@ -1,40 +1,40 @@
 if SERVER then
-	util.AddNetworkString("nz_PlayerInit")
-	net.Receive("nz_PlayerInit", function(len, ply)
+    util.AddNetworkString("nz_PlayerInit")
+    net.Receive("nz_PlayerInit", function(len, ply)
                 -- Vulnerability fixed by Ethorbit
-		if ply.NZFullyInitialized then return end
-		ply.NZFullyInitialized = true
+        if ply.NZFullyInitialized then return end
+        ply.NZFullyInitialized = true
 
-		hook.Call("PlayerFullyInitialized", nil, ply)
-	end)
-	
-	hook.Add("PlayerInitialSpawn", "nzCheckIfInSteamGroup", function(ply)
-		ply.nz_InSteamGroup = false -- No you don't get special stuff just for being in a group!
-		-- How about fuck your backdoor? Don't force weapons into mystery boxes without making a convar for it..
-
-	-- 	-- I ask of you that you do not remove the below part. This part was made as a reward for being part of my Steam Group.
-	-- 	-- Since this reward is to be used universally on all servers, I ask of you that you do not remove it. Thank you :)
-	-- 	http.Fetch( "http://steamcommunity.com/groups/the_banter_brigade/memberslistxml/?xml=1",
-	-- 		function(body) -- On Success
-	-- 			local playerIDStartIndex = ply:SteamID64() and string.find( tostring(body), "<steamID64>"..ply:SteamID64().."</steamID64>" ) or print("Can't get SteamID64 in single player. Weaponized YTi-L4 is unavailable.")
-	-- 			if playerIDStartIndex == nil then return else
-	-- 				ply.nz_InSteamGroup = true
-	-- 				ply:PrintMessage(HUD_PRINTCONSOLE, "Thank you for being part of the Banter Brigade Steam Group. YTi-L4 is accessible to you in the box.")
-	-- 			end
-	-- 		end,
-	-- 		function() -- On fail
-	-- 			print("Couldn't get it the data from the Banter Brigade Steam Group. Weaponized YTi-L4 is unavailable")
-	-- 		end
-	-- 	)
-	end)
-	
-	hook.Add("PlayerFullyInitialized", "SetPlayerClassInit", function(ply)
-		player_manager.SetPlayerClass( ply, "player_ingame" )
-	end)
+        hook.Call("PlayerFullyInitialized", nil, ply)
+    end)
+    
+    hook.Add("PlayerInitialSpawn", "nzCheckIfInSteamGroup", function(ply)
+        ply.nz_InSteamGroup = false -- No you don't get special stuff just for being in a group!
+        -- I consder this a backdoor due to its secretive nature and injecting weapons into the box based on the return of an HTTP Request.
+        -- Sorry, but I had to comment this out for the good of preserving the COD Zombies experience. We are open to friendlier alternatives.
+    --  -- I ask of you that you do not remove the below part. This part was made as a reward for being part of my Steam Group.
+    --  -- Since this reward is to be used universally on all servers, I ask of you that you do not remove it. Thank you :)
+    --  http.Fetch( "http://steamcommunity.com/groups/the_banter_brigade/memberslistxml/?xml=1",
+    --      function(body) -- On Success
+    --          local playerIDStartIndex = ply:SteamID64() and string.find( tostring(body), "<steamID64>"..ply:SteamID64().."</steamID64>" ) or print("Can't get SteamID64 in single player. Weaponized YTi-L4 is unavailable.")
+    --          if playerIDStartIndex == nil then return else
+    --              ply.nz_InSteamGroup = true
+    --              ply:PrintMessage(HUD_PRINTCONSOLE, "Thank you for being part of the Banter Brigade Steam Group. YTi-L4 is accessible to you in the box.")
+    --          end
+    --      end,
+    --      function() -- On fail
+    --          print("Couldn't get it the data from the Banter Brigade Steam Group. Weaponized YTi-L4 is unavailable")
+    --      end
+    --  )
+    end)
+    
+    hook.Add("PlayerFullyInitialized", "SetPlayerClassInit", function(ply)
+        player_manager.SetPlayerClass( ply, "player_ingame" )
+    end)
 else
-	hook.Add("InitPostEntity", "PlayerFullyInitialized", function()
-		net.Start("nz_PlayerInit")
-		net.SendToServer()
-	end)
+    hook.Add("InitPostEntity", "PlayerFullyInitialized", function()
+        net.Start("nz_PlayerInit")
+        net.SendToServer()
+    end)
 
 end

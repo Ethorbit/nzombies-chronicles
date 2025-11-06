@@ -34,7 +34,7 @@ function nzElec:Activate(nochat)
 	
 	-- Inform players
 	if !nochat then
-		PrintMessage(HUD_PRINTTALK, "[NZ] Electricity is on!")
+		PrintMessage(HUD_PRINTTALK, "[nZ] Electricity is on!")
 		net.Start("nz.nzElec.Sound")
 			net.WriteBool(true)
 		net.Broadcast()

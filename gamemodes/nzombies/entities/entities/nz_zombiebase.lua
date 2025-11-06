@@ -67,6 +67,9 @@ AccessorFunc( ENT, "fNextPlayerTarget", "NextPlayerTarget", FORCE_NUMBER)
 --AccessorFunc( ENT, "fLastPlayerTarget", "LastPlayerTarget", FORCE_NUMBER)
 AccessorFunc( ENT, "bAttackingPaused", "AttackingPaused", FORCE_BOOL)
 
+-- Optimization
+AccessorFunc( ENT, "bCheckingForLag", "CheckingForLag", FORCE_NUMBER)
+
 --sounds
 AccessorFunc( ENT, "fNextMoanSound", "NextMoanSound", FORCE_NUMBER)
 
@@ -108,6 +111,27 @@ AccessorFunc( ENT, "bLastInvalidPath", "LastInvalidPath", FORCE_BOOL)
 AccessorFunc( ENT, "bTargetUnreachable", "TargetUnreachable", FORCE_BOOL)
 
 AccessorFunc( ENT, "iActStage", "ActStage", FORCE_NUMBER)
+
+-- Shared data Optimization.
+-- When all zombies of a class do the same exact thing,
+-- cache calculations inside this table
+local shared_data = {}
+local function get_shared_data()
+    return shared_data
+end
+
+function ENT:GetSharedData(key)
+    if not key then return shared_data[self:GetClass()] end
+    return shared_data[self:GetClass()] and shared_data[self:GetClass()][key]
+end
+
+function ENT:SetSharedData(key, val)
+    if not shared_data[self:GetClass()] then
+        shared_data[self:GetClass()] = {}
+    end
+
+    shared_data[self:GetClass()][key] = val
+end
 
 ENT.ActStages = {}
 
@@ -153,6 +177,10 @@ function ENT:GetDebugging()
     return self.debugvar and self.debugvar:GetBool()
 end
 
+function ENT:GetDebuggingLag()
+    return self.debuglagvar and self.debuglagvar:GetBool()
+end
+
 
 -- Collision helper functions added by Ethorbit so that custom enemies don't need to hardcode the collision type
 function ENT:EnableCollision()
@@ -170,6 +198,7 @@ end
 function ENT:Initialize()
     self:SetSpawned(false)
     self.debugvar = GetConVar("nz_zombie_debug")
+    self.debuglagvar = GetConVar("nz_lag_debug")
 
     self:SetAttackingPaused(false)
     self.FrozenTime = 0
@@ -203,9 +232,9 @@ function ENT:Initialize()
     --self:SetRenderMode(RENDERMODE_TRANSCOLOR)
 
 
-    if CLIENT and NZEvent and NZEvent != "NONE" then
+    if CLIENT and NZEvents then
         if (holidayEnabled and holidayEnabled:GetInt() > 0) then
-            if (NZEvent == "Christmas") then
+            if (NZEvents.Active("Christmas")) then
                 self.CustomModelColor = table.Random({Color(255, 0, 0), Color(0, 255, 0)})
             end
         end
@@ -339,6 +368,9 @@ function ENT:CreateTrigger() -- By Ethorbit, Zombies now have triggers that cove
     self.CollisionTrigger:ListenToTriggerEvent(function(event, ent)
         if event != "Touch" then return end
         if ent:IsPlayer() then return end
+        if ent:IsValidZombie() then return end -- Since zombies can overlap, this causes insane amounts of collision. If you want this, optimize this better first.
+
+        print(CurTime(), event, ent)
 
         if !self.ForcedCollisions[ent] or CurTime() > self.ForcedCollisions[ent] then
             local phys_obj = ent:GetPhysicsObject()
@@ -587,6 +619,43 @@ function ENT:Think()
 
     end
     self:OnThink()
+
+    -- Optimization by giving zombies artificial lag to slow down processing by: Ethorbit
+    -- As our frames drop, the zombies gradually think slower and appear to lag,
+    -- then they start to respawn until the game stops lagging
+    --
+    -- This basically prevents zombies from single-handedly lagging out the server
+    local max_think = 0.1
+    local think_time = self:CalculateNextThink()
+    if SERVER then
+        if self:GetDebuggingLag() or !nzRound:InState(ROUND_CREATE) then
+            if !TimescaleChanged() and !self.NZBoss and !self.NZBossType then
+                if think_time >= (CurTime() + max_think) then
+                    if !self:GetCheckingForLag() and (CurTime() - self:GetLastSpawnTime()) >= 2 then
+                        self:SetCheckingForLag(true)
+                        self:TimedEvent(math.Rand(0.0, 5.0), function()
+                            if (self:CalculateNextThink() >= (CurTime() + max_think)) then
+                                self:RespawnZombie()
+                            else
+                                self:SetCheckingForLag(false)
+                            end
+                        end)
+                    end
+                end
+            end
+        end
+    end
+
+    self:NextThink(think_time)
+    if CLIENT then self:SetNextClientThink(think_time) end -- Does this even do anything?
+end
+
+function ENT:CalculateNextThink()
+    local max_fps = MaxFPS()
+    local fps_loss_ratio = (max_fps - CurrentFPS()) / max_fps
+    local think_frame_scale = 1 + math.pow(math.max(0, fps_loss_ratio * 5), 1.5)  
+    local next_think = (CurTime() + (engine.TickInterval() * think_frame_scale))
+    return next_think
 end
 
 function ENT:DebugThink()
@@ -752,7 +821,7 @@ function ENT:Draw()
     self:DrawModel()
 
     if CLIENT then
-        if (NZEvent == "April Fools") then
+        if NZEvents.Active("April Fools") then
             if (!self.AprilFoolsModelScale) then
                 self.AprilFoolsModelScale = math.Rand(0.45, 1.5)
             else
@@ -768,7 +837,7 @@ function ENT:Draw()
     if (!zombieEyeRenderInt or zombieEyeRenderInt and zombieEyeRenderInt > 0) then
         local eyeColor
         if (holidayEnabled and holidayEnabled:GetInt() > 0) then
-            if (NZEvent == "Christmas") then
+            if NZEvents and NZEvents.Active("Christmas") then
                 eyeColor = Color(math.random(0, 255), math.random(0, 255), math.random(0, 255)) -- Christmas light eyes
             end
 
@@ -2049,15 +2118,18 @@ function ENT:Kill(dmginfo, noprogress, noragdoll)
 end
 
 function ENT:RespawnZombie()
-    if SERVER then
-        if self:GetSpawner() then
-            self:GetSpawner():IncrementZombiesToSpawn()
-            self:GetSpawner():DecrementZombiesSpawned()
-            self:GetSpawner():MarkNextZombieAsRespawned()
-        end
+    self:MakeDust(1)
+    self:TimedEvent(0.5, function()
+        if SERVER then
+            if self:GetSpawner() then
+                self:GetSpawner():IncrementZombiesToSpawn()
+                self:GetSpawner():DecrementZombiesSpawned()
+                self:GetSpawner():MarkNextZombieAsRespawned()
+            end
 
-        self:Remove()
-    end
+            self:Remove()
+        end
+    end)
 end
 
 function ENT:Freeze(time)
@@ -2398,7 +2470,7 @@ function ENT:TriggerBarricadeJump( barricade, dir )
 
         if jumping then 
             if type(animtbl) == "number" then -- ACT_ is a number, this is set if it's an ACT
-                id = self:SelectWeightedSequence(animtbl)
+                id = self:SafeSelectWeightedSequence(animtbl)
                 dur = self:SequenceDuration(id)
                 speed = self:GetSequenceGroundSpeed(id)
                 if speed < 10 then
@@ -2411,13 +2483,13 @@ function ENT:TriggerBarricadeJump( barricade, dir )
                     speed = targettbl.speed
                     --dur = targettbl.time or dur
                 else
-                    id = self:SelectWeightedSequence(ACT_JUMP)
+                    id = self:SafeSelectWeightedSequence(ACT_JUMP)
                     dur = self:SequenceDuration(id)
                     speed = 30
                 end
             end
         else 
-            id = self:SelectWeightedSequence(self:GetActivity()) --self:SelectWeightedSequence(ACT_JUMP)
+            id = self:SafeSelectWeightedSequence(self:GetActivity()) --self:SafeSelectWeightedSequence(ACT_JUMP)
             dur = self:SequenceDuration(id)
             speed = self:GetRunSpeed() --self.loco:GetDesiredSpeed()
         
@@ -2482,9 +2554,64 @@ function ENT:GetShootPos()
 
 end
 
+function ENT:LogInvalidActivity(act)
+    local act_str = tostring(act)
+    local log = string.format("[nZ] The activity: %s is INVALID for class: %s\n", act_str, self:GetClass())
+
+    if SERVER then
+        ServerLog(log)
+    else
+        print(log)
+    end
+end
+
+-- Make a way to check if an activity is valid
+-- This should ALWAYS be used before playing an activity
+-- 
+-- This was needed because if it plays an inactive activity, the
+-- entire nextbot breaks and it can't do anything — not even respawn
+-- By: Ethorbit
+function ENT:HasActivity(act)
+    -- If it's a string (sequence name), convert to activity first
+    if type(act) == "string" then
+        local seqId = self:LookupSequence(act)
+        if seqId == -1 then
+            return false -- Invalid sequence name
+        end
+        act = self:GetSequenceActivity(seqId)
+    end
+
+    -- Check cache first
+    local validActivities = self:GetSharedData("ValidActivities") or {}
+    if validActivities[act] ~= nil then return validActivities[act] end
+
+    -- Not cached, check and cache the result
+    for i = 0, self:GetSequenceCount() - 1 do
+        if self:GetSequenceActivity(i) == act then
+            validActivities[act] = true
+            self:SetSharedData("ValidActivities", validActivities)
+            return true
+        end
+    end
+
+    validActivities[act] = false
+    self:SetSharedData("ValidActivities", validActivities)
+    return false
+end
+
+-- Safeguard SelectWeightedSequence: make it reject invalid activities
+-- By: Ethorbit
+function ENT:SafeSelectWeightedSequence(act)
+    if not self:HasActivity(act) then
+        self:LogInvalidActivity(act)
+    return ACT_IDLE end
+
+    return self:SelectWeightedSequence(act)
+end
+
 function ENT:LookupSequenceAct(id)
     if type(id) == "number" then
-        local id = self:SelectWeightedSequence(id)
+        local id = self:SafeSelectWeightedSequence(id)
         local dur = self:SequenceDuration(id)
         return id, dur
     else
@@ -2493,6 +2620,11 @@ function ENT:LookupSequenceAct(id)
 end
 
 function ENT:StartActivitySeq(act)
+    -- Safeguard added by: Ethorbit
+    if not self:HasActivity(act) then
+        self:LogInvalidActivity(act)
+    return end
+
     if type(act) == "number" then
         self:StartActivity(act)
     else

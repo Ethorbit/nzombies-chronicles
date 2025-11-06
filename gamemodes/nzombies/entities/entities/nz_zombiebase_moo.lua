@@ -1857,6 +1857,10 @@ if SERVER then
         BaseClass.OnKilled(self, dmginfo)
     end
 
+    -- DON'T RAGDOLL. We got our own cool death thing.
+    function ENT:OnZombieDeath()
+    end
+
     function ENT:PostDeath(dmginfo) end -- Called when you want something to happen after the zombie dies...
 
     function ENT:PerformDeath(dmginfo)
@@ -2682,7 +2686,7 @@ if SERVER then
 
     function ENT:TriggerBarricadeJump( barricade, dir, ... )
         self.ActStages[self:GetActStage()] = self.ActStages[self:GetActStage()] or {}
-        self.ActStages[self:GetActStage()].barricadejumps = self.JumpSequences or self:SelectWeightedSequence(ACT_JUMP)
+        self.ActStages[self:GetActStage()].barricadejumps = self.JumpSequences or self:SafeSelectWeightedSequence(ACT_JUMP)
         BaseClass.TriggerBarricadeJump(self, barricade, dir, ...)
     end
     
@@ -2703,7 +2707,7 @@ if SERVER then
  
     --      if self.JumpSequences then
     --          if type(animtbl) == "number" then -- ACT_ is a number, this is set if it's an ACT
-    --              id = self:SelectWeightedSequence(animtbl)
+    --              id = self:SafeSelectWeightedSequence(animtbl)
     --              dur = self:SequenceDuration(id)
     --              speed = self:GetSequenceGroundSpeed(id)
     --              if speed < 10 then
@@ -2720,7 +2724,7 @@ if SERVER then
     --                      useswalkframes = true
     --                  end
     --              else
-    --                  id = self:SelectWeightedSequence(ACT_JUMP)
+    --                  id = self:SafeSelectWeightedSequence(ACT_JUMP)
     --                  dur = self:SequenceDuration(id)
     --                  speed = 30
     --              end
@@ -2772,7 +2776,7 @@ if SERVER then
 
     --function ENT:LookupSequenceAct(id)
     --  if type(id) == "number" then
-    --      local id = self:SelectWeightedSequence(id)
+    --      local id = self:SafeSelectWeightedSequence(id)
     --      local dur = self:SequenceDuration(id)
     --      return id, dur
     --  else
