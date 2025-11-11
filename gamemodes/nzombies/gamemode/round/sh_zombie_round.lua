@@ -42,7 +42,7 @@ function nzRound:AddZombieType(id, class, enemydata)
 end
 
 function nzRound:GetDefaultZombieType()
-    return "WaW"
+    return "OG"
 end
 
 function nzRound:SetZombieType(id)

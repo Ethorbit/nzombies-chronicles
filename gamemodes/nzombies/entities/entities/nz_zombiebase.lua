@@ -370,7 +370,9 @@ function ENT:CreateTrigger() -- By Ethorbit, Zombies now have triggers that cove
         if ent:IsPlayer() then return end
         if ent:IsValidZombie() then return end -- Since zombies can overlap, this causes insane amounts of collision. If you want this, optimize this better first.
 
-        print(CurTime(), event, ent)
+        -- if self:GetDebugging() then
+        --    print(CurTime(), event, ent)
+        -- end
 
         if !self.ForcedCollisions[ent] or CurTime() > self.ForcedCollisions[ent] then
             local phys_obj = ent:GetPhysicsObject()
