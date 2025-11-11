@@ -2103,9 +2103,6 @@ function ENT:Explode(dmg, suicide)
 end
 
 function ENT:Kill(dmginfo, noprogress, noragdoll)
-    if self.nextAllowedKill and CurTime() < self.nextAllowedKill then return end
-    self.nextAllowedKill = CurTime() + 0.1
-
     dmginfo = dmginfo or DamageInfo()
     --if (self:Health() <= 0) then return end -- This would cause a crash with some things like Paralyzer
 
