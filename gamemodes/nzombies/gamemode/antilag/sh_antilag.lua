@@ -33,7 +33,8 @@ NZAntiLag = {
         if !fps_threshold then print(string.format("[nZ] Failed to create NZAntiLag definition. fps_threshold for lag level %s, entry %s is invalid.\n", level_name, name)) return end
 
         hook.Add("FPSDrop", level_name .. "_" .. name, function(fps, _)
-            if !is_debugging() and nzRound:InState(ROUND_CREATE) then return end -- We really only need AntiLag for real gameplay
+            if game.SinglePlayer() then return end -- Unless a miracle happens, Singleplayer will always be a laggy mess. No serious soul should play nZombies in Singleplayer..
+            if not nzRound:InState(ROUND_PROG) then return end -- We really only need AntiLag for real gameplay
 
             cooldowns[level_name] = cooldowns[level_name] or {}
             cooldowns[level_name][name] = cooldowns[level_name][name] or {}

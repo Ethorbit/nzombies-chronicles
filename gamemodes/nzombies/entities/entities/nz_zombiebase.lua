@@ -629,7 +629,7 @@ function ENT:Think()
     -- This basically prevents zombies from single-handedly lagging out the server
     local max_think = 0.1
     local think_time = self:CalculateNextThink()
-    if SERVER then
+    if SERVER and not game.SinglePlayer() then
         if self:GetDebuggingLag() or !nzRound:InState(ROUND_CREATE) then
             if !TimescaleChanged() and !self.NZBoss and !self.NZBossType then
                 if think_time >= (CurTime() + max_think) then
