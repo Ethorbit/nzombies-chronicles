@@ -1408,21 +1408,22 @@ function ENT:ChaseTarget( options )
         end
         --print(self.loco:GetGroundMotionVector(), self:GetForward())
         local goal = path:GetCurrentGoal()
-        if !goal then
-            local jumpHeight = math.abs(self:GetTarget():GetPos()[3] - self:GetPos()[3]) * 2
-            if jumpHeight > 100 then -- While we do want them to jump to make exploiting on props harder, we DON'T want them to jump if the player is not high enough away
-                local should_attack = true --math.random(3) == 1 -- We mainly want to jump at cheaters, but let's also hit them randomly so they shit their pants
-                if jumpHeight > 150 then -- Hitting them from here won't do shit, just jump.
-                    should_attack = false
-                end
+        -- This old code was used to combat cheaters, but cheaters cannot boost themselves in the air anymore so leave it to the config editors to fix their problems.
+        -- if !goal then
+        --     local jumpHeight = math.abs(self:GetTarget():GetPos()[3] - self:GetPos()[3]) * 2
+        --     if jumpHeight > 100 then -- While we do want them to jump to make exploiting on props harder, we DON'T want them to jump if the player is not high enough away
+        --         local should_attack = true --math.random(3) == 1 -- We mainly want to jump at cheaters, but let's also hit them randomly so they shit their pants
+        --         if jumpHeight > 150 then -- Hitting them from here won't do shit, just jump.
+        --             should_attack = false
+        --         end
 
-                if should_attack then -- The reason we force attack instead of letting them auto attack when close enough during jump, is because they can't jump when a player is likely on top of them
-                    self:Attack()
-                else
-                    self:JumpToTargetHeight(jumpHeight)
-                end
-            end
-        end
+        --         if should_attack then -- The reason we force attack instead of letting them auto attack when close enough during jump, is because they can't jump when a player is likely on top of them
+        --             self:Attack()
+        --         else
+        --             self:JumpToTargetHeight(jumpHeight)
+        --         end
+        --     end
+        -- end
 
         -- Teleport to destination when we get stuck moving there.
         -- if self:GetVelocity() == Vector(0,0,0) then
