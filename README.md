@@ -1,3 +1,10 @@
+# Development paused for offline use
+
+Due to nZombies Rezzurrection stealing my code and not giving me any credit, I've decided to keep changes exclusive to the [servers](https://nzcservers.com) for the time being.
+
+Please let the nZombies Rezzurrection devs know that their actions are actively hurting nZombies.
+
+
 # ![Icon](icon.png) nZombies Chronicles
 
 WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies), a collaborative effort to fix everything wrong with nZombies.
