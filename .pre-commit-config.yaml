@@ -3,6 +3,7 @@ repos:
     rev: v2.4.0
     hooks:
       - id: add-license-header
+        files: \.(lua)$
         args:
           - --exit-zero-if-unsupported
           - --license-file
