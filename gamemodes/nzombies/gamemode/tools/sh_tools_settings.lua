@@ -1,7 +1,7 @@
 --[[ LICENSE HEADER MANAGED BY add-license-header
 
 Copyright (C) 2014-2015 Alig96
-Copyright (C) 2015-2022 Zet0rz
+Copyright (C) 2015-2017 Zet0rz
 Copyright (C) 2020-2025 Ethorbit
 
 This program is free software: you can redistribute it and/or modify
