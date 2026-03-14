@@ -545,22 +545,38 @@ else
 	   return view
 	end
 
-	-- Auto weapon reloading
-	local autoReload = GetConVar("nz_weapon_auto_reload")
-	hook.Add("CreateMove", "NZAutoReload", function(cmd)
-		local wep = LocalPlayer():GetActiveWeapon()
-		if (IsValid(wep)) then
-			local clip = wep:Clip1()
-			if (isnumber(clip) and clip - 1 < 0) then -- Fired last shot
-				if (isfunction(wep.GetStatus) and isnumber(wep:GetStatus()) and wep:GetStatus() == 5) then return end -- Already reloading
-				if (isfunction(wep.Ammo1) and wep:Ammo1() == 0) then return end -- Can't reload, there's no ammo!
-				if (wep.Primary and (!wep.Primary.ClipSize or isnumber(wep.Primary.ClipSize) and wep.Primary.ClipSize <= 0)) then return end -- We don't need to ever reload this
-				if autoReload:GetBool() then -- Auto Reload option enabled
-					cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_RELOAD))
-				end
-			end
-		end
-	end)
+    -- Auto weapon reloading
+    local autoReload = GetConVar("nz_weapon_auto_reload")
+    local nextReload = 0
+    hook.Add("CreateMove", "NZAutoReload", function(cmd)
+        local wep = LocalPlayer():GetActiveWeapon()
+        if (IsValid(wep)) then
+            local clip = wep:Clip1()
+            if (isnumber(clip) and clip - 1 < 0) then -- Fired last shot
+                if (isfunction(wep.GetStatus) and isnumber(wep:GetStatus()) and wep:GetStatus() == 5) then return end -- Already reloading
+                if (isfunction(wep.Ammo1) and wep:Ammo1() == 0) then return end -- Can't reload, there's no ammo!
+                if (wep.Primary and (!wep.Primary.ClipSize or isnumber(wep.Primary.ClipSize) and wep.Primary.ClipSize <= 0)) then return end -- We don't need to ever reload this
+                if autoReload:GetBool() and CurTime() > nextReload then -- Auto Reload option enabled
+                    if game.SinglePlayer() then -- I hate Garry's Mod
+                        if CurTime() > nextReload then
+                            nextReload = CurTime() + 0.1
+                            LocalPlayer():ConCommand("+reload")
+                            timer.Simple(0, function()
+                                LocalPlayer():ConCommand("-reload")
+                            end)
+                        end
+                    else
+                        cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_RELOAD))
+                    end
+                end
+            end
+        end
+    end)
+    if game.SinglePlayer() then -- I hate Garry's Mod
+        hook.Add("ShutDown", "NZAutoReloadCleanup", function()
+            LocalPlayer():ConCommand("-reload")
+        end)
+    end
 
 	-- local function OverrideTheCalcView()
 	--     if GAMEMODE and isfunction(GAMEMODE.CalcView) then
