@@ -38,19 +38,6 @@ Server List → nZombies → **nZC | THE #1 Classic**
 
 `play.nzcservers.com:27018`
 
-## Download
-##### Missing Content
-
-Some content is missing from this repo because of copyright concerns.
-
-You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470).
-##### Steps
-1. Create a directory called nzombies-chronicles in your `garrysmod/addons`
-2. Download this repository
-3. Extract the files to `garrysmod/addons/nzombies-chronicles`
-4. Make sure the path is structured like this: `garrysmod/addons/nzombies-chronicles/gamemodes/nzombies`
-
-
 <br />
 
 ![YouTube Header Icon](https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/YouTube_2024.svg/200px-YouTube_2024.svg.png)
@@ -64,3 +51,15 @@ You can download them from the [Addon Collection](https://steamcommunity.com/sha
 [![Video #7](https://img.youtube.com/vi/z6I1l2KxVm0/mqdefault.jpg)](https://youtu.be/z6I1l2KxVm0) [![Video #8](https://img.youtube.com/vi/LSUhRvZbGso/mqdefault.jpg)](https://youtu.be/LSUhRvZbGso)
 
 [![Video #9](https://img.youtube.com/vi/AElNIpRnzBw/mqdefault.jpg)](https://youtu.be/AElNIpRnzBw) [![Video #10](https://img.youtube.com/vi/9jK7QX0dzA8/mqdefault.jpg)](https://youtu.be/9jK7QX0dzA8)
+
+## Download
+##### Missing Content
+
+Some content is missing from this repo because of copyright concerns.
+
+You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470).
+##### Steps
+1. Create a directory called nzombies-chronicles in your `garrysmod/addons`
+2. Download this repository
+3. Extract the files to `garrysmod/addons/nzombies-chronicles`
+4. Make sure the path is structured like this: `garrysmod/addons/nzombies-chronicles/gamemodes/nzombies`
