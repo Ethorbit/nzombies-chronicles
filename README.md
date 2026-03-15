@@ -53,13 +53,28 @@ Server List → nZombies → **nZC | THE #1 Classic**
 [![Video #9](https://img.youtube.com/vi/AElNIpRnzBw/mqdefault.jpg)](https://youtu.be/AElNIpRnzBw) [![Video #10](https://img.youtube.com/vi/9jK7QX0dzA8/mqdefault.jpg)](https://youtu.be/9jK7QX0dzA8)
 
 ## Download
-##### Missing Content
+#### Missing Content
 
 Some content is missing from this repo because of copyright concerns.
 
 You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3378413470).
-##### Steps
-1. Create a directory called nzombies-chronicles in your `garrysmod/addons`
-2. Download this repository
-3. Extract the files to `garrysmod/addons/nzombies-chronicles`
-4. Make sure the path is structured like this: `garrysmod/addons/nzombies-chronicles/gamemodes/nzombies`
+
+#### Steps
+Follow these steps to ensure the gamemode and all associated assets (models, materials, etc.) mount correctly.
+
+1.  **Download & Extract:** Download the repository ZIP and extract it to a temporary location.
+2.  **Locate the Root:** Open the extracted folder. You should see several directories such as `models`, `materials`, `sound`, and `gamemodes` all in one place.
+3.  **Move to Addons:** Move the folder containing those directories into your `garrysmod/addons/` folder. You can rename it `nzombies-chronicles`.
+4.  **Verify the File Structure:** Your directory tree **must** look like this for the assets to load:
+    * `garrysmod/addons/nzombies-chronicles/gamemodes/`
+    * `garrysmod/addons/nzombies-chronicles/lua/`
+    * `garrysmod/addons/nzombies-chronicles/models/`
+    * `garrysmod/addons/nzombies-chronicles/materials/`
+    * `garrysmod/addons/nzombies-chronicles/sound/`
+    * `garrysmod/addons/nzombies-chronicles/particles/`
+5. Restart your game
+6. In the gamemodes selection on the bottom right, select nZombies
+
+⚠️ Conflict warning:
+* You can only have **one** nZombies gamemode mounted at a time. If you aren't seeing the gamemode show up, completely remove any other nZombies game.
+* Many addons **break the game**. Uninstall anything that gives errors. Stick to official and reputable addons.
