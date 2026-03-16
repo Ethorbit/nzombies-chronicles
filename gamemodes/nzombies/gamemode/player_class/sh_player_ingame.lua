@@ -64,7 +64,7 @@ end
 if not ConVarExists("nz_failsafe_preventgrenades") then CreateConVar("nz_failsafe_preventgrenades", 0, {FCVAR_SERVER_CAN_EXECUTE, FCVAR_ARCHIVE, FCVAR_NOTIFY}) end
 
 function PLAYER:Loadout()
-	--self:Give("tfa_down_weapon")
+    --self:Give("tfa_down_weapon")
 
 	-- Give ammo and guns
 	if nzMapping.Settings.startwep and weapons.Get(nzMapping.Settings.startwep) then
@@ -105,6 +105,8 @@ function PLAYER:Loadout()
 end
 
 function PLAYER:Spawn()
+    self.Player:PrintMessage(HUD_PRINTTALK, "[nZC] Public development has been PAUSED! To play with the latest changes, join the official server. Server List > nZombies > nZC | THE #1 Classic or connect via IP: play.nzcservers.com:27018")
+    
     self.Player:SetCustomCollisionCheck(false) -- lag fix /Ethorbit
     
     if (game.SinglePlayer()) then
