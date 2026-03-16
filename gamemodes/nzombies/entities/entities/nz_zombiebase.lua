@@ -641,35 +641,6 @@ function ENT:Think()
 
     end
     self:OnThink()
-
-    -- Optimization by giving zombies artificial lag to slow down processing by: Ethorbit
-    -- As our frames drop, the zombies gradually think slower and appear to lag,
-    -- then they start to respawn until the game stops lagging
-    --
-    -- This basically prevents zombies from single-handedly lagging out the server
-    local max_think = 0.1
-    local think_time = self:CalculateNextThink()
-    if SERVER and not game.SinglePlayer() then
-        if self:GetDebuggingLag() or !nzRound:InState(ROUND_CREATE) then
-            if !TimescaleChanged() and !self.NZBoss and !self.NZBossType then
-                if think_time >= (CurTime() + max_think) then
-                    if !self:GetCheckingForLag() and (CurTime() - self:GetLastSpawnTime()) >= 2 then
-                        self:SetCheckingForLag(true)
-                        self:TimedEvent(math.Rand(0.0, 5.0), function()
-                            if (self:CalculateNextThink() >= (CurTime() + max_think)) then
-                                self:RespawnZombie()
-                            else
-                                self:SetCheckingForLag(false)
-                            end
-                        end)
-                    end
-                end
-            end
-        end
-    end
-
-    self:NextThink(think_time)
-    if CLIENT then self:SetNextClientThink(think_time) end -- Does this even do anything?
 end
 
 function ENT:CalculateNextThink()

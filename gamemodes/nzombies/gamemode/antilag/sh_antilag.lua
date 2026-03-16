@@ -53,7 +53,7 @@ NZAntiLag = {
         if !fps_threshold then print(string.format("[nZ] Failed to create NZAntiLag definition. fps_threshold for lag level %s, entry %s is invalid.\n", level_name, name)) return end
 
         hook.Add("FPSDrop", level_name .. "_" .. name, function(fps, _)
-            if game.SinglePlayer() then return end -- Unless a miracle happens, Singleplayer will always be a laggy mess. No serious soul should play nZombies in Singleplayer..
+            if true then return end -- This is not ready for production
             if not nzRound:InState(ROUND_PROG) then return end -- We really only need AntiLag for real gameplay
 
             cooldowns[level_name] = cooldowns[level_name] or {}
@@ -114,15 +114,15 @@ local function update_levels(max_fps)
     NZAntiLag.Levels.Add("LOW", math.Round(max_fps * 0.25))
     NZAntiLag.Levels.Add("CRITICAL", math.Round(max_fps * 0.1))
 
-    NZAntiLag.Create("Respawn Zombies", "LOW", function()
-        if SERVER then
-            for _,zombie in pairs(ents.GetAll()) do
-                if zombie.RespawnZombie then
-                    zombie:RespawnZombie()
-                end
-            end
-        end
-    end, 5)
+    --NZAntiLag.Create("Respawn Zombies", "LOW", function()
+    --    if SERVER then
+    --        for _,zombie in pairs(ents.GetAll()) do
+    --            if zombie.RespawnZombie then
+    --                zombie:RespawnZombie()
+    --            end
+    --        end
+    --    end
+    --end, 5)
 
     -- Restarting the round is too disruptive to gameplay
     -- NZAntiLag.Create("Restart Round", "CRITICAL", function()
