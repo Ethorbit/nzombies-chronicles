@@ -7,7 +7,7 @@
     "maps"	"^nz_"
 	"category" "pve"
 
-    "author_name"   "Alig96, Zet0r, Lolle"
+    "author_name"   "Alig96, Zet0r, Lolle, Ethorbit"
     "author_email"  ""
 
     "icon"  ""
