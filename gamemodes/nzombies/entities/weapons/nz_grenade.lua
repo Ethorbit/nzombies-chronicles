@@ -18,6 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
+--
+-- [[
+-- Copyright (C) Hidden
+-- Black Ops grenade ported to nZombies
+-- ]]
+
 if SERVER then
 	AddCSLuaFile("nz_grenade.lua")
 	SWEP.Weight			= 1
