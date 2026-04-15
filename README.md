@@ -40,7 +40,7 @@ Server List → nZombies → **nZC | THE #1 Classic**
 
 <br />
 
-![YouTube Header Icon](https://images.weserv.nl/?url=upload.wikimedia.org/wikipedia/commons/2/20/YouTube_2024.svg&w=200)
+![YouTube Header Icon](https://site.nzcservers.com/nzombies/include/thumbnails/youtube-header.png)
 
 [![Video](https://img.youtube.com/vi/TYadzB2K8Hk/mqdefault.jpg)](https://youtu.be/TYadzB2K8Hk) [![Video #2](https://img.youtube.com/vi/q_ssJOMZxPk/mqdefault.jpg)](https://youtu.be/q_ssJOMZxPk)
 
