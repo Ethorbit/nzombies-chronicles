@@ -42,9 +42,9 @@ Server List → nZombies → **nZC | THE #1 Classic**
 
 ![YouTube Header Icon](https://site.nzcservers.com/nzombies/include/thumbnails/youtube-header.png)
 
-[![Video](https://img.youtube.com/vi/TYadzB2K8Hk/mqdefault.jpg)](https://youtu.be/TYadzB2K8Hk) [![Video #2](https://img.youtube.com/vi/q_ssJOMZxPk/mqdefault.jpg)](https://youtu.be/q_ssJOMZxPk)
+[![Video](https://img.youtube.com/vi/TYadzB2K8Hk/mqdefault.jpg)](https://youtu.be/TYadzB2K8Hk) [![Video #2](https://img.youtube.com/vi/nAnIhMNTwvQ/mqdefault.jpg)](https://youtu.be/nAnIhMNTwvQ)
 
-[![Video #3](https://img.youtube.com/vi/5RsQMy0UBsg/mqdefault.jpg)](https://youtu.be/5RsQMy0UBsg) [![Video #4](https://img.youtube.com/vi/6D3ayfos2M8/mqdefault.jpg)](https://youtu.be/6D3ayfos2M8)
+[![Video #3](https://img.youtube.com/vi/WhoPCMRyB6I/mqdefault.jpg)](https://youtu.be/WhoPCMRyB6I) [![Video #4](https://img.youtube.com/vi/6D3ayfos2M8/mqdefault.jpg)](https://youtu.be/6D3ayfos2M8)
 
 [![Video #5](https://img.youtube.com/vi/YV8jzCho6QY/mqdefault.jpg)](https://youtu.be/YV8jzCho6QY) [![Video #6](https://img.youtube.com/vi/xVa8k3TJmWk/mqdefault.jpg)](https://youtu.be/xVa8k3TJmWk)
 
