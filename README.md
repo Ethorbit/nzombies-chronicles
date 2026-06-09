@@ -1,4 +1,4 @@
-## Development PAUSED for public use!
+## 🛑 Development PAUSED for public use!
 
 Due to nZombies Rezzurrection **stealing** my code and **not giving any credit**, I've decided to **keep changes exclusive to the [servers](https://nzcservers.com)** for the time being.
 
@@ -6,7 +6,7 @@ See [Server Usage](#server-usage) for details on how to join.
 
 ## ⚠️ ZOMBIES BROKEN thanks to the [April 2026 Garry's Mod Update](https://steamcommunity.com/games/garrysmod/announcements/detail/498352656701457833?snr=2___)
 
-**Rubat** dropped another stinker, this time **completely breaking my nextbots in Singleplayer**.
+**Rubat** dropped another stinker, this time **completely breaking the zombies in Singleplayer**.
 
 [I submitted a bug report](https://github.com/Facepunch/garrysmod-issues/issues/6835) and of course,
 > it's an issue with your testing
