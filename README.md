@@ -4,22 +4,6 @@ Due to nZombies Rezzurrection **stealing** my code and **not giving any credit**
 
 See [Server Usage](#server-usage) for details on how to join.
 
-## ⚠️ ZOMBIES BROKEN thanks to the [April 2026 Garry's Mod Update](https://steamcommunity.com/games/garrysmod/announcements/detail/498352656701457833?snr=2___)
-
-**Rubat** dropped another stinker, this time **completely breaking the zombies in Singleplayer**.
-
-[I submitted a bug report](https://github.com/Facepunch/garrysmod-issues/issues/6835) and of course,
-> it's an issue with your testing
-
-> nobody else has come forward
-
-> it is not reproducible on my end
-
-Except this build hasn't changed. Did my nextbots decide to **break themselves**? That makes no sense. He obviously broke something and now it's my burden.
-
-
-![Example](https://i.imgur.com/oKLGnHM.png)
-
 # [![Icon](icon.png)](https://nzcservers.com) nZombies Chronicles
 
 WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies), a collaborative effort to fix everything wrong with nZombies.
