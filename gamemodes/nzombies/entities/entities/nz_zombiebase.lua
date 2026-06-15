@@ -642,6 +642,10 @@ function ENT:Think()
 
     end
     self:OnThink()
+
+    -- The April 2026 Garry's Mod update requires that I do this or the engine will break my zombies
+    -- https://github.com/Facepunch/garrysmod-issues/issues/6835
+    self:NextThink(CurTime())
 end
 
 function ENT:CalculateNextThink()
