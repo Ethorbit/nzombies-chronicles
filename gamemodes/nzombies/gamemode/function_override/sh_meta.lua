@@ -558,26 +558,13 @@ else
                 if (isfunction(wep.Ammo1) and wep:Ammo1() == 0) then return end -- Can't reload, there's no ammo!
                 if (wep.Primary and (!wep.Primary.ClipSize or isnumber(wep.Primary.ClipSize) and wep.Primary.ClipSize <= 0)) then return end -- We don't need to ever reload this
                 if autoReload:GetBool() and CurTime() > nextReload then -- Auto Reload option enabled
-                    if game.SinglePlayer() then -- I hate Garry's Mod
-                        if CurTime() > nextReload then
-                            nextReload = CurTime() + 0.1
-                            LocalPlayer():ConCommand("+reload")
-                            timer.Simple(0, function()
-                                LocalPlayer():ConCommand("-reload")
-                            end)
-                        end
-                    else
+                    if not game.SinglePlayer() then -- I hate Garry's Mod
                         cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_RELOAD))
                     end
                 end
             end
         end
     end)
-    if game.SinglePlayer() then -- I hate Garry's Mod
-        hook.Add("ShutDown", "NZAutoReloadCleanup", function()
-            LocalPlayer():ConCommand("-reload")
-        end)
-    end
 
 	-- local function OverrideTheCalcView()
 	--     if GAMEMODE and isfunction(GAMEMODE.CalcView) then
