@@ -11,22 +11,22 @@ WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies)
 * Holds incredibly high standards
 * Stays true to classic gameplay
 * Fully supports Singleplayer and Multiplayer
-* Fixes the mode without completely changing it
-    * Bug Fixes 👟🐛
-    * Vulnerability Patches 🩹🦠
-    * Optimization 🏃
-    * Stability 💪
-    * Multiplayer Compatibility 🌐
+* Improves the mode without completely changing it:
+    * Bug Fixes
+    * Performance Optimization
+    * Multiplayer Compatibility
+    * Security Patches
     * ![Icon](no-script-errors.png)
-* Adds content without altering the core gameplay
-    * Icons
+* Adds content without altering the core gameplay:
     * Tools
     * Traps
-    * Zombie / Boss variants
-    * Dynamic Spawners
+    * Zombie and Boss variants
+    * Spawners
+    * Icons
+    * Documentation
 
 ## Server Usage
-nZombies Chronicles runs on the official **nZC** server, which first opened in 2020. It has ranked #1, receiving over 10,000 unique players!
+nZombies Chronicles powers the official **nZC** server, which first opened in 2020. It has ranked #1, receiving over 10,000 unique players!
 
 ##### [Website](https://nzcservers.com) | [Discord](https://discord.gg/Xmmvb55AjZ)
 
