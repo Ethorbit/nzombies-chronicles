@@ -5,7 +5,7 @@ Due to nZombies Rezzurrection **stealing** my code and **not giving any credit**
 See [Server Usage](#server-usage) for details on how to join.
 
 # [![Icon](readme/icon.png)](https://nzcservers.com) nZombies Chronicles
-##### **nZC** (**nZombies Chronicles**) is a community-driven successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies).
+**nZC** (**nZombies Chronicles**) is a community-driven successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies).
 
 It recreates the **classic Call of Duty Zombies** experience in **Valve’s Source Engine**, featuring **hundreds** of community-made zombie maps, perks, weapons, and round-based gameplay inspired by **Treyarch's CoD Zombies**.
 
