@@ -4,20 +4,25 @@ Due to nZombies Rezzurrection **stealing** my code and **not giving any credit**
 
 See [Server Usage](#server-usage) for details on how to join.
 
-# [![Icon](icon.png)](https://nzcservers.com) nZombies Chronicles
+# [![Icon](readme/icon.png)](https://nzcservers.com) nZombies Chronicles
+##### **nZC** (**nZombies Chronicles**) is a community-driven successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies).
 
-WIP fork and successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies), a collaborative effort to fix everything wrong with nZombies.
+It recreates the **classic Call of Duty Zombies** experience in **Valve’s Source Engine**, featuring **hundreds** of community-made zombie maps, perks, weapons, and round-based gameplay inspired by **Treyarch's CoD Zombies**.
 
-* Holds incredibly high standards
+![Screenshot 1](./readme/screenshots/1.jpeg)
+![Screenshot 2](./readme/screenshots/2.jpeg)
+
+* Holds high standards
 * Stays true to classic gameplay
 * Fully supports Singleplayer and Multiplayer
+* Keeps download requirements as low as possible
 * Improves the mode without completely changing it:
     * Bug Fixes
     * Performance Optimization
     * Multiplayer Compatibility
     * Security Patches
-    * ![Icon](no-script-errors.png)
-* Adds content without altering the core gameplay:
+    * ![Icon](./readme/no-script-errors.png)
+* Adds new content while preserving core gameplay:
     * Tools
     * Traps
     * Zombie and Boss variants
