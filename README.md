@@ -31,13 +31,13 @@ It recreates the **classic Call of Duty Zombies** experience in **Garry's Mod**,
     * Documentation
 
 ## Server Usage
-nZombies Chronicles powers the official **nZC** server, which first opened in 2020. It has ranked #1, receiving over 10,000 unique players!
+nZombies Chronicles powers the official **nZC** servers, which first opened in 2020. It has ranked #1, receiving over 10,000 unique players!
 
 ##### [Website](https://nzcservers.com) | [Discord](https://discord.gg/Xmmvb55AjZ)
 
 ##### Join via the server browser:
 
-Server List → nZombies → **nZC | THE #1 Classic**
+Server List → **nZombies Chronicles** → nZC
 
 ##### Or connect via the IP:
 
@@ -78,8 +78,7 @@ Follow these steps to ensure the gamemode and all associated assets (models, mat
     * `garrysmod/addons/nzombies-chronicles/sound/`
     * `garrysmod/addons/nzombies-chronicles/particles/`
 5. Restart your game
-6. In the gamemodes selection on the bottom right, select nZombies
+6. In the gamemodes selection on the bottom right, select **nZombies Chronicles**
 
 ⚠️ Conflict warning:
-* You can only have **one** nZombies gamemode mounted at a time. If you aren't seeing the gamemode show up, completely remove any other nZombies game.
 * Many addons **break the game**. Uninstall anything that gives errors. Stick to official and reputable addons.
