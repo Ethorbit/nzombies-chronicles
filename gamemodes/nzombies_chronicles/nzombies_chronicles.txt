@@ -1,10 +1,10 @@
-"nzombies"
+"nZombies Chronicles"
 {
 	"base"		"base"
-    "title"  "nZombies"
+    "title"  "nZombies Chronicles"
     "version"   "4.0"
     "menusystem"	"1"
-    "maps"	"^nz_"
+    "maps"	"^nz_|^nzc_"
 	"category" "pve"
 
     "author_name"   "Alig96, Zet0r, Lolle, Ethorbit"
