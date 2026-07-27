@@ -87,4 +87,4 @@ Follow these steps to ensure the gamemode and all associated assets (models, mat
 
 If an nZombies addon is broken, please **ask the author to support nZombies Chronicles.**
 
-If you are an addon developer, please [learn how to properly support the gamemode](https://gist.github.com/Ethorbit/03fb42e61a147e7f537a74e3a19a9c75).
+If you are an addon developer, please [read the guide on how to properly support the gamemode](https://steamcommunity.com/sharedfiles/filedetails/?id=3772554459).
