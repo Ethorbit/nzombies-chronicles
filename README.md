@@ -82,3 +82,9 @@ Follow these steps to ensure the gamemode and all associated assets (models, mat
 
 ⚠️ Conflict warning:
 * Many addons **break the game**. Uninstall anything that gives errors. Stick to official and reputable addons.
+
+## Addon support for nZombies Chronicles
+
+If an nZombies addon is broken, please **ask the author to support nZombies Chronicles.**
+
+If you are an addon developer, please [learn how to properly support the gamemode](https://gist.github.com/Ethorbit/03fb42e61a147e7f537a74e3a19a9c75).
