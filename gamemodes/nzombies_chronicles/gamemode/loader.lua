@@ -29,7 +29,7 @@ function AddNZModule(id)
 	return tbl
 end
 
-local gmfolder = "nzombies"
+local gmfolder = "nzombies_chronicles"
 
 local _,dirs = file.Find( gmfolder.."/gamemode/*", "LUA" )
 
