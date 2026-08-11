@@ -48,8 +48,8 @@ local function normalize_source(raw)
 end
 
 local function uses_legacy_check(contents)
-    return contents:find("[\"']nzombies[\"']%s*[=~]=")   -- "nzombies" == / "nzombies" ~=
-        or contents:find("[=~]=%s*[\"']nzombies[\"']")   -- == "nzombies" / ~= "nzombies"
+    return contents:find("[\"']nzombies[\"']%s*[=~!]=")   -- "nzombies" == /~= / !=
+        or contents:find("[=~!]=%s*[\"']nzombies[\"']")   -- == / ~= / != "nzombies"
 end
 
 local function log(msg)
