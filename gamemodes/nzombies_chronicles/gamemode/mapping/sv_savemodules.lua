@@ -557,8 +557,9 @@ nzMapping:AddSaveModule("DoorSetup", {
 			elseif door:IsButton() then
 				door:LockButton()
 			end
-			nzDoors.SendSync( ply )
 		end
+
+		nzDoors.SendSync( ply )
 	end,
 })
 
