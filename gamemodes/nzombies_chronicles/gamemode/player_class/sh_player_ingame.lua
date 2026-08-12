@@ -106,7 +106,7 @@ function PLAYER:Loadout()
 end
 
 function PLAYER:Spawn()
-    self.Player:PrintMessage(HUD_PRINTTALK, "[nZC] Public development has been PAUSED! To play with the latest changes, join the official server. Server List > nZombies > nZC | THE #1 Classic or connect via IP: play.nzcservers.com:27018")
+    self.Player:PrintMessage(HUD_PRINTTALK, "[nZC] Public development has been PAUSED! To play with the latest changes, join the official server. Server List > nZombies Chronicles > nZC or connect via IP: play.nzcservers.com:27018")
     
     self.Player:SetCustomCollisionCheck(false) -- lag fix /Ethorbit
     
