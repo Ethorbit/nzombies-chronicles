@@ -53,10 +53,12 @@ function ENT:SetupDataTables()
 	self:NetworkVar("String", 0, "PerkID")
 	self:NetworkVar("Bool", 0, "Active")
 	self:NetworkVar("Bool", 1, "BeingUsed")
+    self:NetworkVar("Bool", 2, "Invalid")
 	self:NetworkVar("Int", 0, "Price")
 end
 
 function ENT:GetJingleSound()
+    if self:GetInvalid() then return "" end
 	local id = self:GetPerkID()
 	if id == "dtap2" then id = "dtap" end
 	return "nzr/perks/jingles/jingle_" .. id .. ".mp3"
@@ -67,6 +69,7 @@ function ENT:StopJingle()
 end	
 
 function ENT:PlayJingle()
+    if self:GetInvalid() then return end
 	if (self:IsOn() and self:GetPerkID() != "wunderfizz") then
 		self:EmitSound(self:GetJingleSound(), 75)	
 	end
@@ -95,18 +98,30 @@ end
 
 function ENT:Initialize()
 	if SERVER then
-		self:SetMoveType( MOVETYPE_NONE )
-		self:SetSolid( SOLID_VPHYSICS )
+		if self:GetInvalid() then
+		    self:SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+            self:SetSolid(SOLID_NONE)
+            self:SetPos(self:GetPos() + Vector(0,0,50))
+        else
+		    self:SetSolid( SOLID_VPHYSICS )
+		end
+        self:SetMoveType( MOVETYPE_NONE )
 		self:DrawShadow( false )
 		self:SetUseType( SIMPLE_USE )
 		self:SetBeingUsed(false)
 		local PerkData = nzPerks:Get(self:GetPerkID())
-		self:SetPrice(PerkData.price)
+		if not PerkData then
+		    self:SetInvalid(true)
+            self:SetModel("models/props_interiors/VendingMachineSoda01a.mdl")
+		return end
+        self:SetPrice(PerkData.price)
 	end
 end
 
 function ENT:TurnOn()
-	if SERVER and !self:GetActive() then
+	if self:GetInvalid() then return end
+
+    if SERVER and !self:GetActive() then
 		timer.Simple(math.Rand(0, 0.3), function()
 			if (IsValid(self)) then
 				self:EmitSound("nzr/machines/perk_turn_on.mp3")
@@ -121,6 +136,8 @@ function ENT:TurnOn()
 end
 
 function ENT:TurnOff()
+    if self:GetInvalid() then return end
+
 	self:SetActive(false)
 	self:Update()
 
@@ -131,8 +148,8 @@ end
 
 function ENT:Update()
 	local PerkData = nzPerks:Get(self:GetPerkID())
-	local skinmodel = PerkData.model
-	if skinmodel then
+	local skinmodel = (PerkData and PerkData.model) --or "models/props_interiors/VendingMachineSoda01a.mdl"
+    if skinmodel then
 		self:SetModel(skinmodel)
 		if self:IsOn() then
 			self:SetSkin(PerkData.on_skin or 0)
@@ -153,7 +170,9 @@ local MachinesNoDrink = {
 }
 
 function ENT:EndTouch(ent)
-	if (self:GetPerkID() == "pap") then return end
+	if self:GetInvalid() then return end
+
+    if (self:GetPerkID() == "pap") then return end
 	if (IsValid(ent) and ent:IsPlayer() and (!ent.LastPerkMachineTouch or CurTime() - ent.LastPerkMachineTouch >= 0.5)) then
 		if (!self.LastBumpTime or CurTime() - self.LastBumpTime >= 1) then
 			self.LastBumpTime = CurTime()
@@ -165,16 +184,18 @@ function ENT:EndTouch(ent)
 end
 
 function ENT:Use(activator, caller)
-	if (self.ProcessingPerks[activator]) then return end -- We're already trying to give them it
+	if self:GetInvalid() then return end
+
+    if (self.ProcessingPerks[activator]) then return end -- We're already trying to give them it
 	if (isnumber(activator.nextUseTime) and CurTime() < activator.nextUseTime) then return end
 	activator.nextUseTime = CurTime() + 1
-	local PerkData = nzPerks:Get(self:GetPerkID())
+	local PerkData = nzPerks:Get(self:GetPerkID()) or {}
 	
 	if self:IsOn() then
 		-- Don't allow Quick Revive purchase for solos out of revives
 		if (PerkData.name == "Quick Revive" and activator.SoloRevive and activator.SoloRevive >= 3 and #player.GetAllPlaying() <= 1) then return end 
 
-		local price = self:GetPrice()
+		local price = self:GetPrice() or 0
 		-- As long as they have less than the max perks, unless it's pap
 		if #activator:GetPerks() < GetConVar("nz_difficulty_perks_max"):GetInt() or self:GetPerkID() == "pap" then
 			-- If they have enough money
@@ -244,12 +265,12 @@ if CLIENT then
 	
 	function ENT:Draw()
 		self:DrawModel()
-		if self:GetActive() then
-			if !self.NextLight or CurTime() > self.NextLight then
-				-- Optimized by Blunto and improved optimization by Ethorbit.
+        if not self:GetInvalid() and self:GetActive() then
+            if !self.NextLight or CurTime() > self.NextLight then
+                -- Optimized by Blunto and improved optimization by Ethorbit.
                 local dlight = DynamicLight( self:EntIndex(),true )
-				if ( dlight ) then
-					local col = nzPerks:Get(self:GetPerkID()).color or usedcolor
+                if ( dlight ) then
+                    local col = nzPerks:Get(self:GetPerkID()).color or usedcolor
                     dlight.pos = self:GetPos() + self:OBBCenter() + (self:GetForward() * 40)
                     dlight.r = col.r
                     dlight.g = col.g
@@ -259,9 +280,9 @@ if CLIENT then
                     dlight.Size = 150
                     dlight.minlight = 0
                     dlight.DieTime = CurTime() + 1
-				end
-				if math.random(300) == 1 then self.NextLight = CurTime() + 0.05 end
-			end
-		end
+                end
+                if math.random(300) == 1 then self.NextLight = CurTime() + 0.05 end
+            end
+        end
 	end
 end

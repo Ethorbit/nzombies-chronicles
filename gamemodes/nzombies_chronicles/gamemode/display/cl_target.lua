@@ -31,7 +31,7 @@ nzTarget.TraceEnts = {
 		local wepclass = ent:GetWepClass()
 		local price = ent:GetPrice()
 		local wep = weapons.Get(wepclass)
-		if !wep then return "INVALID WEAPON" end
+		if !wep then return string.format("INVALID WEAPON: %s", wepclass) end
 		local name = wep.PrintName
 		local ammo_price = math.Round((price - (price % 10))/2)
 		local text = ""

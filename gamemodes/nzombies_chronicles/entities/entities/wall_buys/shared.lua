@@ -36,6 +36,7 @@ function ENT:SetupDataTables()
 	self:NetworkVar( "String", 1, "Price" )
 	self:NetworkVar( "Bool", 0, "Bought" )
 	self:NetworkVar( "Bool", 1, "Flipped" )
+    self:NetworkVar("Bool", 2, "Invalid")
 end
 
 local flipscale = Vector(1.5, 0.01, 1.5) 	-- Decides on which axis it flattens the outline
@@ -211,22 +212,28 @@ end
 if SERVER then
 
 	function ENT:SetWeapon(weapon, price)
-		-- Add a special check for FAS weps
-		local price = price or self:GetPrice()
-		local wep = weapons.Get(weapon)
-		local model
-		if !wep then
-			model = "models/weapons/w_crowbar.mdl"
-		else
-			model = wep.WM or wep.WorldModel
-			--self:SetFlipped(false)
-		end
-		self:SetModel(model)
-		self:SetModelScale( 1.5, 0 )
-		self.WeaponGive = weapon
-		self.Price = price
-		self:SetWepClass(weapon)
-		self:SetPrice(price)
+        if self:GetInvalid() and isstring(weapon) then
+            self.Price = price
+            self:SetModel("models/weapons/w_crowbar.mdl")
+            self:SetWepClass(weapon)
+        else
+            -- Add a special check for FAS weps
+            local price = price or self:GetPrice()
+            local wep = weapons.Get(weapon)
+            local model
+            if !wep then
+                model = "models/weapons/w_crowbar.mdl"
+            else
+                model = wep.WM or wep.WorldModel
+                --self:SetFlipped(false)
+            end
+            self:SetModel(model)
+            self:SetModelScale( 1.5, 0 )
+            self.WeaponGive = weapon
+            self.Price = price
+            self:SetWepClass(weapon)
+            self:SetPrice(price)
+        end
 	end
 	
 	function ENT:ToggleRotate()

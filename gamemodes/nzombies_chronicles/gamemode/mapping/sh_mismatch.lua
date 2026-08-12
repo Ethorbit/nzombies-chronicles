@@ -199,8 +199,10 @@ end, function( data )
 		local new = data[v:GetWepClass()]
 		if new then
 			if new == "nz_removeweapon" then
-				v:Remove()
+				--v:Remove()
+                v:SetInvalid(true)
 			else
+                v:SetInvalid(false)
 				v:SetWeapon(new)
 			end
 		end
@@ -239,7 +241,7 @@ end, function(frame)
 			choice:AddChoice(v2.name or k2, k2, false)
 		end
 		choice.DataChanged = function(self, val)
-			nzMapping.MismatchData["Petks"][k] = val
+			nzMapping.MismatchData["Perks"][k] = val
 		end
 	end
 
@@ -258,8 +260,12 @@ end, function( data )
 		local new = data[v:GetPerkID()]
 		if new then
 			if new == "nz_removeperk" then
-				v:Remove()
+				--v:Remove()
+                v:SetInvalid(true)
+                v:SetPerkID(new or "Unknown")
+                v:Update()
 			else
+                v:SetInvalid(false)
 				v:SetPerkID(new)
 				v:Update() -- Update model and perk values
 			end
