@@ -19,8 +19,10 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 --]]
 
+DeriveGamemode("nzombies")
+
 GM.Name = "nZombies"
-GM.Author = "Alig96, Zet0r, Lolle"
+GM.Author = "Ethorbit, Alig96, Zet0r, Lolle"
 GM.Email = "N/A"
 GM.Website = "N/A"
 
