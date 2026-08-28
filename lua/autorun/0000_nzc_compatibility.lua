@@ -29,13 +29,12 @@ https://imgur.com/a/6qNhTBL
 This file tricks bad addons into thinking we're the regular nZombies.
 --]]
 
-local print_debug_messages = false -- If something isn't working as expected, set this to true and look at console
-
 if engine.ActiveGamemode() ~= "nzombies_chronicles" then return end -- Don't break people's games!
 if engine.ActiveGamemode() == "nzombies" then
     print("nZC gamemode name compatibility successfully loaded.")
 return end
 
+local print_debug_messages = false -- If something isn't working as expected, set this to true and look at console
 local old_active_gamemode = engine.ActiveGamemode
 local this_source = debug.getinfo(1, "S").source:gsub("^@", "")
 local function_cache = setmetatable({}, { __mode = "k" })
