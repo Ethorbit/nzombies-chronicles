@@ -26,7 +26,7 @@ Copyright (C) Ethorbit, 2026
 Added because nZR loves hardcoding "nzombies" checks in their addons.
 https://imgur.com/a/6qNhTBL
 
-This file will tricks bad addons into thinking we're the regular nZombies.
+This file tricks bad addons into thinking we're the regular nZombies.
 --]]
 
 local print_debug_messages = false -- If something isn't working as expected, set this to true and look at console
@@ -35,8 +35,8 @@ if engine.ActiveGamemode() == "nzombies" then
     print("nZC gamemode name compatibility successfully loaded.")
 return end
 
-local this_source = debug.getinfo(1, "S").source:gsub("^@", "")
 local old_active_gamemode = engine.ActiveGamemode
+local this_source = debug.getinfo(1, "S").source:gsub("^@", "")
 local function_cache = setmetatable({}, { __mode = "k" })
 local source_cache = {}
 local warned_sources = {}
