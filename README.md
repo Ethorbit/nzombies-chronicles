@@ -60,9 +60,7 @@ Server List → **nZombies Chronicles** → nZC
 ## Download
 #### Missing Content
 
-Some content is missing from this repo because of copyright concerns.
-
-You can download them from the [Addon Collection](https://steamcommunity.com/sharedfiles/filedetails/?id=3793206336).
+You need to install the [nZombies Chronicles Content Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=3802409789).
 
 #### Steps
 Follow these steps to ensure the gamemode and all associated assets (models, materials, etc.) mount correctly.
