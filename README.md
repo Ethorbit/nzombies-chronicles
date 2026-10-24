@@ -1,10 +1,10 @@
 ## 🛑 Development PAUSED for public use!
 
-Due to nZombies Rezzurrection **stealing** my code and **not giving any credit**, I've decided to **keep changes exclusive to the [servers](https://nzcservers.com)** for the time being.
-
-See [Server Usage](#server-usage) for details on how to join.
+Due to nZombies Rezzurrection stealing our code and not giving any credit, we've decided to **keep changes exclusive to the [servers](https://nzcservers.com)** for the time being.
 
 # [![Icon](readme/icon.png)](https://nzcservers.com) nZombies Chronicles
+ [Download](#download) | [Play the Server](#server-usage)
+
 **nZC** (**nZombies Chronicles**) is a community-driven successor to [Zet0r's nZombies](https://github.com/Zet0rz/nzombies).
 
 It recreates the **classic Call of Duty Zombies** experience in **Garry's Mod**, featuring community-made zombie maps, perks, weapons, and round-based gameplay.
@@ -60,21 +60,17 @@ Server List → **nZombies Chronicles** → nZC
 ## Download
 #### Missing Content
 
-You need to install the [nZombies Chronicles Content Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=3802409789).
+You need to install the [nZombies Chronicles Content Pack](https://steamcommunity.com/sharedfiles/filedetails/?id=3802409789)
 
 #### Steps
-Follow these steps to ensure the gamemode and all associated assets (models, materials, etc.) mount correctly.
+Follow these steps to ensure the gamemode mounts correctly.
 
-1.  **Download & Extract:** Download the repository ZIP and extract it to a temporary location.
-2.  **Locate the Root:** Open the extracted folder. You should see several directories such as `models`, `materials`, `sound`, and `gamemodes` all in one place.
+1.  **Download & Extract:** [Download the repository ZIP](../../archive/refs/heads/master-workshop.zip) and extract it to a temporary location.
+2.  **Locate the Root:** Open the extracted folder. You should see several directories such as `gamemodes` and `lua` all in one place.
 3.  **Move to Addons:** Move the folder containing those directories into your `garrysmod/addons/` folder. You can rename it `nzombies-chronicles`.
 4.  **Verify the File Structure:** Your directory tree **must** look like this for the assets to load:
     * `garrysmod/addons/nzombies-chronicles/gamemodes/`
     * `garrysmod/addons/nzombies-chronicles/lua/`
-    * `garrysmod/addons/nzombies-chronicles/models/`
-    * `garrysmod/addons/nzombies-chronicles/materials/`
-    * `garrysmod/addons/nzombies-chronicles/sound/`
-    * `garrysmod/addons/nzombies-chronicles/particles/`
 5. Restart your game
 6. In the gamemodes selection on the bottom right, select **nZombies Chronicles**
 
