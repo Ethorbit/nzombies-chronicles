@@ -95,7 +95,7 @@ function MenuToolBar:Init()
 	self.Logo:SetPos( 14, 14 )
 	self.Logo:SetFont( "nz.display.hud.main" )
 	self.Logo:SetColor( Color( 255, 255, 255 ) )
-	self.Logo:SetText("nZC")
+	self.Logo:SetText( "nZC" )
 	self.Logo:SizeToContents()
 
 	self.Entries = {}
@@ -138,8 +138,10 @@ function MenuToolBar:Init()
 		end
 	end
 
+	self:AddEntry( "PLAY ONLINE", "medium", function() gui.OpenURL( "https://steamcommunity.com/sharedfiles/filedetails/?id=3719586784" ) end )
+	
 	self:AddEntry( "Press F1 to toggle this menu", "small", function() RunConsoleCommand("nz_settings") end )
-
+	
 	--Settings Button / Close button
 	if ( LocalPlayer():GetUserGroup() == "superadmin" or LocalPlayer():GetUserGroup() == "admin" ) then
 		self.SettingsButton = vgui.Create( "DImageButton", self )
