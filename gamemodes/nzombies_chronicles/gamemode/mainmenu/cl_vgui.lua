@@ -95,7 +95,7 @@ function MenuToolBar:Init()
 	self.Logo:SetPos( 14, 14 )
 	self.Logo:SetFont( "nz.display.hud.main" )
 	self.Logo:SetColor( Color( 255, 255, 255 ) )
-	self.Logo:SetText( "nZombies" )
+	self.Logo:SetText("nZC")
 	self.Logo:SizeToContents()
 
 	self.Entries = {}
@@ -138,10 +138,8 @@ function MenuToolBar:Init()
 		end
 	end
 
-	self:AddEntry( "WORKSHOP PAGE", "medium", function() gui.OpenURL( "http://steamcommunity.com/sharedfiles/filedetails/?id=675138912" ) end )
-	
 	self:AddEntry( "Press F1 to toggle this menu", "small", function() RunConsoleCommand("nz_settings") end )
-	
+
 	--Settings Button / Close button
 	if ( LocalPlayer():GetUserGroup() == "superadmin" or LocalPlayer():GetUserGroup() == "admin" ) then
 		self.SettingsButton = vgui.Create( "DImageButton", self )
